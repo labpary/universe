@@ -1,0 +1,1467 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#05070f">
+<meta name="description" content="从 138 亿年前，到你">
+<title>一小块凝固的时间</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/noto-serif-sc@5/600.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cormorant-garamond@5/300.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/cormorant-garamond@5/400-italic.css">
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #05070f;
+    --ink: #ece6da;
+    --soft: rgba(236, 230, 218, .78);
+    --faint: rgba(236, 230, 218, .45);
+    --line: rgba(236, 230, 218, .18);
+    --gold: #e6c891;
+    --gold-dim: rgba(230, 200, 145, .62);
+    --cn: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+    --en: "Cormorant Garamond", "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  html.locked, html.locked body { overflow: hidden; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--cn);
+    font-size: 17px;
+    line-height: 1.95;
+    font-variant-numeric: lining-nums;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+  .num { font-family: var(--en); font-size: 1.18em; letter-spacing: .02em; }
+
+  /* 画布：飞行的宇宙 */
+  #sky { position: fixed; left: 0; top: 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0; display: block; }
+  .grain {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    opacity: .05; mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* 滚动只用来当“油门”，画面全部固定 */
+  #track { position: relative; z-index: 0; width: 1px; }
+  #stage { position: fixed; inset: 0; z-index: 2; pointer-events: none; overflow: hidden; }
+
+  /* 每一段文字是一个“站点” */
+  .beat {
+    position: absolute; left: 0; right: 0; top: 50%;
+    max-width: 33rem; margin: 0 auto; padding: 0 26px;
+    visibility: hidden; opacity: 0;
+    transform-origin: 50% 50%;
+    will-change: transform, opacity;
+    text-shadow: 0 0 18px rgba(0, 0, 0, .7), 0 0 4px rgba(0, 0, 0, .55);
+  }
+  .beat.low { top: auto; bottom: calc(7vh + env(safe-area-inset-bottom)); transform-origin: 50% 100%; }
+  .beat.on[data-interactive] { pointer-events: auto; }
+  .beat p { margin: 0 0 1em; color: var(--soft); }
+  .beat p:last-child { margin-bottom: 0; }
+  .beat .key { color: var(--ink); font-size: 1.14em; line-height: 1.85; }
+  .beat .key b { font-weight: 600; color: var(--gold); }
+  .beat .note { padding-left: 14px; border-left: 1px solid var(--gold-dim); color: var(--ink); font-size: .95em; }
+  .beat .sub {
+    display: flex; align-items: center; gap: 14px;
+    margin: 0 0 1.4em; font-size: 14px; font-weight: 400; letter-spacing: .4em; color: var(--gold);
+  }
+  .beat .sub::before, .beat .sub::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .center { text-align: center; }
+
+  /* 封面 */
+  .cover h1 { margin: 0; font-weight: 600; font-size: clamp(32px, 8.6vw, 54px); line-height: 1.35; letter-spacing: .14em; text-indent: .14em; }
+  .cover .subtitle { margin: 22px 0 0; color: var(--soft); font-size: clamp(15px, 4.2vw, 18px); letter-spacing: .3em; text-indent: .3em; }
+  .cover .for { margin: 56px 0 0; color: var(--faint); font-size: 13px; letter-spacing: .5em; text-indent: .5em; }
+  .hint {
+    position: fixed; left: 50%; bottom: calc(26px + env(safe-area-inset-bottom)); z-index: 3;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    color: var(--faint); font-size: 11px; letter-spacing: .5em; text-indent: .5em; white-space: nowrap;
+    pointer-events: none;
+  }
+  .hint i { width: 1px; height: 36px; background: linear-gradient(transparent, var(--gold-dim)); animation: rise 2.4s ease-in-out infinite; transform-origin: bottom; }
+  @keyframes rise { 0% { transform: scaleY(0); opacity: 0; } 30% { opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+  .hello p { margin: 0; color: var(--ink); font-size: clamp(20px, 5.6vw, 27px); line-height: 2.1; letter-spacing: .08em; }
+  .hello .name { font-family: var(--en); font-size: 1.25em; letter-spacing: .04em; color: var(--gold); }
+
+  /* 三体插页：暗一点的旧纸 */
+  .paper {
+    position: relative; margin: 0 auto; max-width: 30rem;
+    padding: 40px 28px 34px;
+    background: linear-gradient(170deg, #463d31, #352e25);
+    color: #e2d6be; text-shadow: none;
+    font-size: 15.5px; line-height: 2;
+    border-radius: 2px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .6), inset 0 0 70px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(226, 214, 190, .08);
+    transform: rotate(-.6deg);
+  }
+  .paper::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .45  0 0 0 0 .38  0 0 0 .4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)'/%3E%3C/svg%3E");
+  }
+  .paper .tag { display: inline-block; margin: 0 0 18px; padding: 1px 10px 1px 12px; border: 1px solid #c27a5e; color: #d68c6e; font-size: 12px; line-height: 1.8; letter-spacing: .3em; }
+  .paper h2 { margin: 0 0 14px; font-size: 22px; font-weight: 600; letter-spacing: .2em; }
+  .paper p { margin: 0 0 .8em; color: #e2d6be; text-indent: 2em; }
+  .paper .folio { position: absolute; right: 22px; bottom: 10px; margin: 0; font-family: var(--en); font-style: italic; font-size: 13px; color: rgba(226, 214, 190, .5); text-indent: 0; }
+
+  /* 点亮宇宙 */
+  .gate p { margin: 0; color: var(--ink); font-size: clamp(18px, 5vw, 23px); letter-spacing: .1em; line-height: 2.2; }
+  .gate .turn { margin-top: 22px; }
+  .spark { position: relative; margin: 60px auto 0; width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; }
+  .spark .core {
+    width: 5px; height: 5px; border-radius: 50%; background: #fff;
+    box-shadow: 0 0 6px 2px #fff, 0 0 22px 6px rgba(255, 236, 200, .55), 0 0 60px 18px rgba(255, 210, 150, .18);
+    animation: breathe 3.2s ease-in-out infinite;
+  }
+  .spark .ring { position: absolute; inset: 0; margin: auto; width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255, 236, 200, .5); animation: ripple 3.2s ease-out infinite; }
+  .spark .ring:nth-child(2) { animation-delay: 1.6s; }
+  @keyframes breathe { 50% { transform: scale(1.5); } }
+  @keyframes ripple { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(11); opacity: 0; } }
+  .spark-label { display: block; margin-top: 4px; color: var(--faint); font-size: 12px; letter-spacing: .6em; text-indent: .6em; }
+  .spark:focus-visible { outline: 1px solid var(--gold-dim); outline-offset: 6px; }
+  .spark[disabled] { cursor: default; }
+  .spark[disabled] .ring { display: none; }
+
+  /* 章节标题 */
+  .ch-head { text-align: center; }
+  .beat .ch-no { margin: 0 0 10px; font-size: 12px; letter-spacing: .6em; text-indent: .6em; color: var(--gold-dim); }
+  .ch-head h2 { margin: 0; font-size: clamp(28px, 7.6vw, 40px); font-weight: 600; letter-spacing: .16em; text-indent: .16em; line-height: 1.5; }
+  .beat .ch-time { margin: 12px 0 0; font-family: var(--en); font-style: italic; font-size: 18px; color: var(--soft); letter-spacing: .06em; }
+  .ch-time .cn { font-family: var(--cn); font-style: normal; font-size: 14px; letter-spacing: .12em; }
+
+  /* 宇宙时钟 */
+  .clock {
+    position: fixed; z-index: 5; left: 0; right: 0;
+    top: calc(12px + env(safe-area-inset-top));
+    text-align: center; pointer-events: none;
+    opacity: 0; transform: translateY(-6px);
+    transition: opacity .8s ease, transform .8s ease;
+    text-shadow: 0 0 14px rgba(0, 0, 0, .7);
+  }
+  .clock.on { opacity: 1; transform: none; }
+  .clock::before {
+    content: ""; position: absolute; z-index: -1; left: 0; right: 0;
+    top: calc(-12px - env(safe-area-inset-top)); height: calc(110px + env(safe-area-inset-top));
+    background: linear-gradient(rgba(0, 0, 0, .5) 30%, transparent);
+  }
+  .clock small { display: block; font-size: 10.5px; line-height: 1.6; letter-spacing: .5em; text-indent: .5em; color: var(--faint); }
+  .clock b { display: block; font-weight: 400; line-height: 1.3; white-space: nowrap; }
+  .clock .v { font-family: var(--en); font-weight: 300; font-size: 25px; letter-spacing: .03em; color: var(--gold); }
+  .clock .v sup { font-size: .58em; line-height: 0; vertical-align: .9em; margin-left: 2px; }
+  .clock .u { font-size: 13px; letter-spacing: .15em; margin-left: .35em; color: var(--soft); }
+
+  .progress { position: fixed; z-index: 4; right: 10px; top: 38vh; width: 1px; height: 24vh; background: var(--line); opacity: 0; transition: opacity .8s; pointer-events: none; }
+  .progress.on { opacity: 1; }
+  .progress i { position: absolute; left: -1px; top: 0; width: 3px; height: 100%; background: var(--gold-dim); transform-origin: top; transform: scaleY(0); }
+
+  #veil { position: fixed; inset: 0; z-index: 9; background: #000; opacity: 0; pointer-events: none; transition: opacity .35s ease; }
+  #veil.on { opacity: 1; }
+
+  /* 恒星熔炉 */
+  .star-btn { position: fixed; z-index: 3; left: 0; top: 0; border-radius: 50%; pointer-events: none; }
+  .star-btn.on { pointer-events: auto; }
+  .furnace { position: fixed; z-index: 3; left: 0; right: 0; top: 0; text-align: center; opacity: 0; pointer-events: none; text-shadow: 0 0 10px rgba(0, 0, 0, .8); }
+  .furnace .chips { display: flex; justify-content: center; gap: 6px; }
+  .furnace .chips span { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line); color: var(--faint); font-size: 13px; transition: all .4s; }
+  .furnace .chips span.lit { border-color: var(--c); color: var(--c); box-shadow: 0 0 12px -2px var(--c); }
+  .furnace .tip { margin-top: 10px; font-size: 12px; letter-spacing: .3em; color: var(--gold); }
+  .furnace .tip.pulse { animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .35; } }
+
+  /* 月亮那几年 */
+  .ruler { margin-top: 1.4em; }
+  .ruler .bar { position: relative; height: 6px; border-radius: 3px; background: rgba(236, 230, 218, .12); overflow: hidden; }
+  .ruler .bar i { position: absolute; top: 0; bottom: 0; right: 0; width: 0; border-radius: 3px; transition: width 2.4s cubic-bezier(.2, .7, .2, 1); }
+  .ruler .bar .all { background: rgba(236, 230, 218, .5); }
+  .ruler .bar .ours { background: var(--gold); transition-delay: 1.4s; }
+  .ruler .scale { display: flex; justify-content: space-between; margin-top: 6px; font-size: 13px; color: var(--faint); }
+  .beat .ruler .legend { margin: 6px 0 0; font-size: 13px; color: var(--soft); }
+  .ruler .legend i { display: inline-block; width: 10px; height: 4px; border-radius: 2px; vertical-align: middle; margin: 0 6px 0 0; }
+  .ruler .legend i.w { background: rgba(236, 230, 218, .5); }
+  .ruler .legend i.g { background: var(--gold); margin-left: 14px; }
+
+  /* 宇宙日历 */
+  .cal-box { text-align: center; }
+  .beat .cal-now { margin: 0; font-family: var(--en); font-size: clamp(30px, 9vw, 40px); font-weight: 300; color: var(--gold); line-height: 1.3; letter-spacing: .02em; }
+  .cal-now .cn { font-family: var(--cn); font-size: .5em; letter-spacing: .1em; margin: 0 .15em; color: var(--soft); }
+  .beat .cal-ago { margin: 2px 0 0; font-size: 14px; color: var(--soft); letter-spacing: .1em; }
+  .beat .cal-ev { margin: 12px 0 0; min-height: 1.9em; font-size: 18px; color: var(--ink); letter-spacing: .12em; }
+  .cal-track { position: relative; margin: 26px 0 0; height: 44px; }
+  .cal-segs { position: absolute; left: 0; right: 0; top: 20px; height: 4px; display: flex; gap: 3px; }
+  .cal-segs span { height: 100%; border-radius: 2px; background: rgba(236, 230, 218, .2); }
+  .cal-ticks i { position: absolute; top: 14px; width: 1px; height: 16px; background: var(--gold-dim); }
+  .cal-track input { position: absolute; inset: 0; width: 100%; margin: 0; opacity: 0; cursor: pointer; touch-action: pan-y; }
+  .cal-knob { position: absolute; top: 12px; width: 20px; height: 20px; margin-left: -10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 14px rgba(230, 200, 145, .7); pointer-events: none; }
+  .cal-labels { display: flex; gap: 3px; margin-top: 2px; font-size: 11px; color: var(--faint); letter-spacing: .1em; }
+  .cal-labels span { overflow: hidden; white-space: nowrap; }
+  .beat .cal-hint { margin: 14px 0 0; font-size: 12px; color: var(--faint); letter-spacing: .3em; }
+
+  /* 身体里的星尘 */
+  .els { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 0 14px; }
+  .els button {
+    min-height: 44px; padding: 4px 2px; border-radius: 22px;
+    border: 1px solid var(--line); color: var(--soft); font-size: 14px; line-height: 1.3;
+    transition: border-color .3s, color .3s, box-shadow .3s;
+  }
+  .els button small { display: block; font-family: var(--en); font-size: 13px; color: var(--faint); }
+  .els button.sel { border-color: var(--c); color: var(--ink); box-shadow: 0 0 16px -4px var(--c); }
+  .beat .el-cap { min-height: 3.6em; margin: 0; font-size: 15px; text-align: center; }
+  .el-cap button { margin-left: 8px; color: var(--gold); font-size: 13px; letter-spacing: .1em; border-bottom: 1px solid var(--gold-dim); }
+
+  /* 歌者的诗 */
+  .poem { text-align: center; }
+  .poem .lines p { margin: 0; color: var(--ink); font-size: clamp(19px, 5.4vw, 24px); line-height: 2.3; letter-spacing: .14em; }
+  .poem .lines span { display: inline-block; opacity: 0; transform: translateY(6px); filter: blur(5px); }
+  .poem.played .lines span { animation: glyph 1.6s cubic-bezier(.2, .7, .2, 1) var(--d) forwards; }
+  @keyframes glyph { 60% { text-shadow: 0 0 18px rgba(255, 230, 180, .9); } to { opacity: 1; transform: none; filter: none; } }
+  .beat .src { margin: 22px 0 0; font-size: 12px; color: var(--faint); letter-spacing: .2em; }
+
+  .end { text-align: center; }
+  .beat .last { margin: 0 0 7vh; color: var(--ink); font-size: clamp(19px, 5.2vw, 23px); line-height: 2; letter-spacing: .1em; }
+  .beat .bday { margin: 0; font-size: clamp(22px, 6vw, 28px); font-weight: 600; letter-spacing: .16em; color: var(--gold); }
+  .beat .sign { margin: 22px 0 0; font-size: 13px; color: var(--faint); letter-spacing: .3em; }
+  .end .sign .num { font-size: 1.1em; }
+
+  @media (min-width: 720px) {
+    body { font-size: 18px; }
+    .paper { padding: 50px 44px 42px; font-size: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spark .core, .spark .ring, .hint i { animation: none; }
+    .poem.played .lines span { animation-duration: .01s; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div id="track"></div>
+
+<div class="clock" id="clock" aria-hidden="true">
+  <small id="clockL">宇宙年龄</small>
+  <b><span class="v" id="clockV">0</span><span class="u" id="clockU">秒</span></b>
+</div>
+<div class="progress" id="progress" aria-hidden="true"><i></i></div>
+<div class="hint" id="hint" aria-hidden="true"><i></i><span>向上滑，往前飞</span></div>
+
+<button class="star-btn" id="starBtn" type="button" aria-label="点一下这颗星，让它烧下去"></button>
+<div class="furnace" id="furnace" aria-hidden="true">
+  <div class="chips" id="chips"></div>
+  <div class="tip pulse" id="furnaceTip">点一下这颗星</div>
+</div>
+
+<div id="stage">
+
+  <!-- ============ 开篇 ============ -->
+  <section class="beat center cover" data-id="cover" data-sky="now" data-len="100" data-travel="160">
+    <h1>一小块凝固的时间</h1>
+    <p class="subtitle">从 138 亿年前，到你</p>
+    <p class="for">给嘉欣 · 二十七岁生日</p>
+  </section>
+
+  <section class="beat center hello" data-id="hello" data-len="100" data-travel="200">
+    <p>我叫 <span class="name">labpary</span>，</p>
+    <p>我们要讲一个浪漫的故事。</p>
+  </section>
+
+  <section class="beat" data-id="fiction" data-len="150" data-travel="200">
+    <article class="paper">
+      <span class="tag">科幻 · 三体</span>
+      <h2>田园时代</h2>
+      <p>在刘慈欣的《三体》里，宇宙最初是一座田园。</p>
+      <p>那时的宇宙有十个维度，光速几乎是无限的，光一瞬间就能从宇宙这头走到那头。</p>
+      <p>后来，文明之间开始打仗。它们把降低维度、降低光速当作武器。一仗一仗打下来，宇宙从十维跌到了三维，光速也降到了每秒 30 万公里。</p>
+      <p>在小说里，我们今天看到的宇宙，是战争留下的废墟。</p>
+      <p class="folio">—— 以上是小说</p>
+    </article>
+  </section>
+
+  <section class="beat center gate" data-id="gate" data-sky="void" data-len="120" data-travel="120" data-interactive>
+    <p>这是小说。</p>
+    <p class="turn">真实的宇宙，是这样开始的。</p>
+    <button class="spark" id="spark" type="button" aria-label="轻触，点亮宇宙">
+      <span class="ring"></span><span class="ring"></span><span class="core"></span>
+    </button>
+    <span class="spark-label" id="sparkLabel">轻触</span>
+  </section>
+
+  <!-- ============ 第一章 ============ -->
+  <section class="beat ch-head" data-id="c1h" data-sky="hot" data-age="1e-43" data-len="100" data-travel="90">
+    <p class="ch-no">第一章</p>
+    <h2>宇宙的上古时代</h2>
+    <p class="ch-time">138 <span class="cn">亿年前</span></p>
+  </section>
+  <section class="beat" data-id="c1a" data-len="110" data-travel="80">
+    <p class="key">138 亿年前，宇宙从一个极小、极热、极密的状态开始膨胀。</p>
+    <p>时间和空间，可能都是从这一刻开始的。</p>
+  </section>
+  <section class="beat" data-id="c1b" data-age="1e-36" data-len="120" data-travel="80">
+    <p>在第一秒还远远没过完的时候，物理学家猜想，自然界的四种基本力（引力、电磁力、强核力、弱核力）可能是同一种力。宇宙冷下来以后，它们才一个一个分开。</p>
+  </section>
+  <section class="beat" data-id="c1c" data-len="130" data-travel="80">
+    <p>还有一种理论叫超弦理论。它的数学要求宇宙有 <span class="num">10</span> 个维度：除了我们感受得到的 <span class="num">3</span> 个空间维度和 <span class="num">1</span> 个时间维度，剩下 <span class="num">6</span> 个蜷缩得太小，看不见。</p>
+    <p class="note">这两件事都还没被证实。但大刘的十维田园，不是凭空想出来的。</p>
+  </section>
+  <section class="beat" data-id="c1d" data-sky="warm" data-age="180" data-len="120" data-travel="80">
+    <h3 class="sub">头几分钟</h3>
+    <p>宇宙继续膨胀、变冷。在最初的几分钟里，质子和中子结合成原子核，宇宙造出了氢和氦。</p>
+    <p>宇宙里几乎所有的氢，都是那时造的，一直用到今天。</p>
+  </section>
+  <section class="beat" data-id="c1e" data-len="110" data-travel="80">
+    <p>你身体里有水。一个水分子是两个氢原子加一个氧原子。</p>
+    <p class="key">那些氢，已经 <b><span class="num">138</span> 亿岁</b>了。</p>
+  </section>
+  <section class="beat" data-id="c1f" data-sky="ember" data-age="380000y" data-len="120" data-travel="60">
+    <h3 class="sub">38 万年</h3>
+    <p>在这之前，宇宙是一锅滚烫的雾。光走不了多远，就会撞上自由的电子，被弹开。</p>
+  </section>
+  <section class="beat" data-id="c1g" data-sky="clear" data-len="130" data-travel="1100">
+    <p>38 万年时，宇宙冷到了约 <span class="num">3000</span> 度。电子被原子核抓住，雾散了。</p>
+    <p class="key">宇宙第一次变得透明，光开始自由地走。</p>
+  </section>
+  <section class="beat low" data-id="c1i" data-len="130" data-travel="300">
+    <p>这束光至今还在。它走了 138 亿年，被宇宙的膨胀拉长成了微波，叫作宇宙微波背景辐射。</p>
+  </section>
+  <section class="beat" data-id="c1j" data-len="120" data-travel="700">
+    <p class="key">老电视没信号时屏幕上的雪花，大约有 <b><span class="num">1%</span></b> 来自它。</p>
+  </section>
+
+  <!-- ============ 第二章 ============ -->
+  <section class="beat ch-head" data-id="c2h" data-sky="dark" data-age="1e8y" data-len="100" data-travel="400">
+    <p class="ch-no">第二章</p>
+    <h2>第一批恒星</h2>
+    <p class="ch-time"><span class="cn">宇宙约</span> 2 <span class="cn">亿岁</span></p>
+  </section>
+  <section class="beat" data-id="c2a" data-len="120" data-travel="400">
+    <p>之后的一亿多年，宇宙是黑的。没有恒星，只有慢慢冷却的氢和氦。天文学家把这段时间叫作“黑暗时代”。</p>
+  </section>
+  <section class="beat" data-id="c2b" data-sky="firstStars" data-age="2e8y" data-len="130" data-travel="700">
+    <p>引力把气体一团一团拉到一起。团块中心越压越热，到了一千万度，氢开始聚变成氦。</p>
+    <p class="key">第一批恒星亮了。</p>
+  </section>
+  <section class="beat low" data-id="c2c" data-len="160" data-travel="160">
+    <p>恒星是一座熔炉：氢烧成氦，氦烧成碳和氧。比太阳重得多的恒星还会接着烧：氖、镁、硅……一直烧到铁。</p>
+  </section>
+  <section class="beat low" data-id="c2d" data-len="140" data-travel="30">
+    <p>烧到铁就停了。铁的原子核是最稳定的，再聚变不但不放出能量，还要吸收能量。熔炉熄火的那一刻，恒星开始塌缩。</p>
+  </section>
+  <section class="beat low" data-id="c2e" data-len="110" data-travel="30">
+    <p class="key">你呼吸的氧，你身体里的碳，都是在这样的熔炉里炼出来的。</p>
+  </section>
+
+  <!-- ============ 第三章 ============ -->
+  <section class="beat low ch-head" data-id="c3h" data-age="5e9y" data-len="100" data-travel="30">
+    <p class="ch-no">第三章</p>
+    <h2>恒星之死</h2>
+    <p class="ch-time"><span class="cn">此后的几十亿年</span></p>
+  </section>
+  <section class="beat low" data-id="c3a" data-len="150" data-travel="200">
+    <p>比太阳重 8 倍以上的恒星，熔炉熄火后，核心会在不到一秒的时间里塌下去，再猛地弹开，把整颗星炸碎。这就是超新星。</p>
+  </section>
+  <section class="beat" data-id="c3b" data-sky="nebula" data-len="120" data-travel="450">
+    <p>一颗超新星爆发时，可以比它所在的整个星系还亮。</p>
+    <p>爆炸把恒星一辈子炼出的东西撒进太空，铁也在其中。</p>
+  </section>
+  <section class="beat" data-id="c3c" data-len="130" data-travel="450">
+    <p>你的血液里有铁。一个成年人身上大约有 3 到 4 克铁，红细胞靠它运送氧气。</p>
+    <p class="key">这些铁原子，都来自已经死去的恒星。</p>
+  </section>
+  <section class="beat" data-id="c3d" data-sky="gold" data-len="100" data-travel="300">
+    <h3 class="sub">金子</h3>
+    <p>比铁更重的金，来历更罕见。</p>
+  </section>
+  <section class="beat low" data-id="c3e" data-len="160" data-travel="80">
+    <p>恒星爆炸后，有时会留下一颗中子星：只有一座城市大小，一茶匙的物质就重约 10 亿吨。两颗中子星互相绕转，越转越近，最后撞在一起，金和铂就在这样的碰撞里生成。</p>
+  </section>
+  <section class="beat low" data-id="c3f" data-len="160" data-travel="200">
+    <p>2017 年 8 月 17 日，人类第一次既“听到”了这样一次碰撞的引力波，又看到了它发出的光。据天文学家从那道光推算，这一次碰撞造出的金和铂，有几十个地球那么重。</p>
+  </section>
+  <section class="beat" data-id="c3g" data-len="130" data-travel="500">
+    <p class="key">所以，如果有一天我送你一枚戒指，戒指上的金，来自两颗中子星的相撞。它比地球还老。</p>
+  </section>
+
+  <!-- ============ 第四章 ============ -->
+  <section class="beat low ch-head" data-id="c4h" data-sky="cloud" data-age="9.187e9y" data-len="100" data-travel="200">
+    <p class="ch-no">第四章</p>
+    <h2>太阳和地球</h2>
+    <p class="ch-time">46 <span class="cn">亿年前</span></p>
+  </section>
+  <section class="beat low" data-id="c4a" data-len="130" data-travel="120">
+    <p>银河系的一个角落里，有一团气体和尘埃。里面除了氢和氦，还混着前几代恒星留下的碳、氧、铁和金。</p>
+  </section>
+  <section class="beat low" data-id="c4b" data-len="120" data-travel="80">
+    <p>大约 46 亿年前，这团云开始塌缩，可能是附近一颗超新星的冲击波推了它一下。</p>
+  </section>
+  <section class="beat low" data-id="c4c" data-sky="sun" data-len="170" data-travel="60">
+    <p>中间最密的地方越来越热，点燃了氢，那就是太阳。剩下的尘埃绕着它转，彼此碰撞、粘在一起，越滚越大，成了行星。从里往外数第三颗，是地球。</p>
+  </section>
+  <section class="beat low" data-id="c4d" data-len="130" data-travel="50">
+    <p>所以太阳不是第一代恒星。它和地球，都是用前人的遗骸造的。</p>
+    <p class="key">地球上几乎所有比氦重的元素，都来自比太阳更早死去的恒星。</p>
+  </section>
+  <section class="beat low" data-id="c4e" data-len="130" data-travel="50">
+    <p>我们认识以来，地球带着我们绕太阳转了 <span data-live="orbits">快 5 圈</span>，走了 <span data-live="orbitKm">约 47 亿公里</span>。太阳系又带着这一切，在银河里走了 <span data-live="galKm">约 360 亿公里</span>。</p>
+  </section>
+
+  <!-- ============ 第五章 ============ -->
+  <section class="beat low ch-head" data-id="c5h" data-sky="moon" data-age="9.287e9y" data-len="100" data-travel="100">
+    <p class="ch-no">第五章</p>
+    <h2>月亮</h2>
+    <p class="ch-time"><span class="cn">约</span> 45 <span class="cn">亿年前</span></p>
+  </section>
+  <section class="beat low" data-id="c5a" data-len="160" data-travel="40">
+    <p>地球刚形成不久，一颗火星大小的天体撞了上来。这是目前最主流的解释。撞飞的碎片在地球周围聚成一圈，又慢慢聚成了月亮。</p>
+  </section>
+  <section class="beat low" data-id="c5b" data-len="120" data-travel="30">
+    <p>刚形成时，月亮离地球只有现在的十几分之一，在天上看起来比现在大十几倍。</p>
+  </section>
+  <section class="beat low" data-id="c5c" data-len="160" data-travel="30">
+    <p>之后，潮汐一点一点把它推远。现在它每年远离约 3.8 厘米。这个数是量出来的：阿波罗宇航员在月面上放了反射镜，人们从地球打激光过去，计算光往返的时间。</p>
+  </section>
+  <section class="beat low" data-id="c5d" data-len="110" data-travel="30">
+    <p>作为交换，地球自转在变慢。6 亿多年前，一天只有约 22 个小时。</p>
+  </section>
+  <section class="beat low" data-id="c5e" data-len="160" data-travel="30">
+    <p class="key">从你出生到现在，月亮离开了地球 <b data-live="moonBirth">103 厘米</b>，比一米还多。</p>
+    <p class="key">从我们认识到现在，它又走远了 <b data-live="moonMet">19 厘米</b>。</p>
+    <div class="ruler" id="ruler">
+      <div class="bar"><i class="all"></i><i class="ours"></i></div>
+      <div class="scale"><span>0</span><span data-live="moonBirth">103 厘米</span></div>
+      <p class="legend"><i class="w"></i>你出生以来<i class="g"></i>我们认识以来</p>
+    </div>
+  </section>
+
+  <!-- ============ 第六章 ============ -->
+  <section class="beat ch-head" data-id="c6h" data-sky="life" data-age="9.987e9y" data-len="100" data-travel="200">
+    <p class="ch-no">第六章</p>
+    <h2>生命</h2>
+    <p class="ch-time"><span class="cn">约</span> 38 <span class="cn">亿年前</span></p>
+  </section>
+  <section class="beat low" data-id="c6a" data-len="150" data-travel="150">
+    <p>地球上最早的生命痕迹，大约有 35 亿到 38 亿年。</p>
+    <p>生命是怎么开始的，至今没人确切知道。一种主流的猜想是：</p>
+    <p class="key">早期的海洋里，出现了第一个会复制自己的分子。</p>
+  </section>
+  <section class="beat low" data-id="c6b" data-len="130" data-travel="150">
+    <p>复制会出错。出错的版本里，有的复制得更快、更稳，它们就留了下来。这就是演化的开始。</p>
+  </section>
+  <section class="beat low" data-id="c6c" data-len="120" data-travel="150">
+    <p class="key">这个复制、出错、留下的过程，38 亿年里一次也没停过，直到出现了你。</p>
+  </section>
+  <section class="beat low" data-id="c6d" data-len="120" data-travel="250">
+    <p>生命用的原料，就是前面几章造出来的：第一章的氢，第二章的碳、氧、氮，第三章的磷和铁。</p>
+  </section>
+
+  <!-- ============ 第七章 ============ -->
+  <section class="beat ch-head" data-id="c7h" data-sky="calendar" data-age="13.787e9y" data-len="100" data-travel="250">
+    <p class="ch-no">第七章</p>
+    <h2>宇宙日历</h2>
+  </section>
+  <section class="beat" data-id="c7a" data-len="140" data-travel="100">
+    <p>138 亿年太长了，换个方法看。</p>
+    <p>把宇宙的全部历史压成一年：大爆炸是 1 月 1 日零点，现在是 12 月 31 日午夜。这一年里，每一秒相当于 437 年。</p>
+  </section>
+  <section class="beat cal-box" data-id="c7b" data-len="220" data-travel="0" data-interactive>
+    <p class="cal-now" id="calNow">1 月 1 日</p>
+    <p class="cal-ago" id="calAgo">138 亿年前</p>
+    <p class="cal-ev" id="calEv">大爆炸</p>
+    <div class="cal-track">
+      <div class="cal-segs"><span style="flex:62"></span><span style="flex:16"></span><span style="flex:14"></span><span style="flex:8"></span></div>
+      <div class="cal-ticks" id="calTicks"></div>
+      <div class="cal-knob" id="calKnob"></div>
+      <input type="range" id="calRange" min="0" max="1" step="0.0005" value="0" aria-label="拖动宇宙日历">
+    </div>
+    <div class="cal-labels"><span style="flex:62">一年</span><span style="flex:16">最后一天</span><span style="flex:14">一小时</span><span style="flex:8">分</span></div>
+    <p class="cal-hint">左右拖动</p>
+  </section>
+
+  <!-- ============ 第八章 ============ -->
+  <section class="beat ch-head" data-id="c8h" data-sky="light" data-mode="dist" data-len="100" data-travel="300">
+    <p class="ch-no">第八章</p>
+    <h2>光在路上</h2>
+    <p class="ch-time"><span class="cn">此刻</span></p>
+  </section>
+  <section class="beat low" data-id="c8a" data-len="160" data-travel="300">
+    <p>你抬头看到的星光，是很多年前出发的。反过来也一样：地球反射的阳光，也一直在往宇宙深处走。它早已暗到没有任何望远镜能看见，但它一直在走，每年走 1 光年。</p>
+  </section>
+  <section class="beat low" data-id="c8b" data-len="170" data-travel="700">
+    <p>我们认识那天的光，已经走了 <span data-live="metLy">4.99</span> 光年。</p>
+    <p class="key" data-live="metPass">今年春天，它越过了离太阳最近的恒星，比邻星。下一站是巴纳德星，2027 年底到。</p>
+  </section>
+  <section class="beat low" data-id="c8c" data-len="180" data-travel="1000">
+    <p>你出生那天的光，现在走到了 <span data-live="birthLy">27</span> 光年外。</p>
+    <p class="key" data-live="birthPass">它在 2016 年秋天路过了牛郎星，2024 年底路过了织女星。</p>
+  </section>
+
+  <!-- ============ 尾声 ============ -->
+  <section class="beat ch-head low" data-id="c9h" data-sky="dust" data-age="13.787e9y" data-len="100" data-travel="300">
+    <p class="ch-no">尾声</p>
+    <h2>星尘与你</h2>
+  </section>
+  <section class="beat low" data-id="c9a" data-len="130" data-travel="50">
+    <p>把前面的东西都收回来。</p>
+    <p>你身上大约有几千亿亿亿个原子。按重量算：</p>
+  </section>
+  <section class="beat low" data-id="c9b" data-len="240" data-travel="0" data-interactive>
+    <div class="els" id="els"></div>
+    <p class="el-cap" id="elCap">点一下，看它从哪里来</p>
+  </section>
+  <section class="beat low" data-id="c9c" data-len="130" data-travel="40">
+    <p class="key">你是由 138 亿岁的氢、恒星炼出的碳和氧、超新星撒出的铁组成的。</p>
+  </section>
+  <section class="beat" data-id="c9d" data-len="120" data-travel="150">
+    <p>《三体 III：死神永生》里，有一个叫歌者的文明，唱过一首古老的歌谣：</p>
+  </section>
+  <section class="beat poem" data-id="c9e" data-len="170" data-travel="80">
+    <div class="lines" id="poemLines"></div>
+    <p class="src" id="poemSrc"></p>
+  </section>
+  <section class="beat end" data-id="c9f" data-len="160" data-travel="80">
+    <p class="last">这是 138 亿年，<br>凝成的一小块时间。</p>
+    <p class="bday">27 岁生日快乐，嘉欣。</p>
+    <p class="sign">labpary · <span class="num">2026</span> 年 <span class="num">12</span> 月 <span class="num">15</span> 日</p>
+  </section>
+</div>
+
+<div id="veil"></div>
+
+<script>
+/* ======== 想改文案，只改这里 ======== */
+const CONFIG = {
+  birth: [1999, 12, 15],
+  met: [2021, 12, 20],
+  poem: ["她把时间涂满全身", "然后拉起我飞向存在的边缘"],
+  poemSrc: "—— 刘慈欣《三体 III：死神永生》"
+};
+
+/* ======== 常量（出处见文案） ======== */
+const DAY = 864e5, YR_D = 365.25, YS = YR_D * 86400;
+const MOON_CM_PER_YR = 3.82;     // 激光测月
+const EARTH_KMS = 29.78;         // 地球公转平均速度
+const SUN_GAL_KMS = 230;         // 太阳绕银心速度（220–250）
+const UNIVERSE_YR = 13.787e9;    // Planck 2018
+const STARS_LY = [               // 距离（光年），Hipparcos / Gaia
+  ["比邻星", 4.2465, "255,150,120"], ["南门二", 4.344, "255,236,200"], ["巴纳德星", 5.963, "255,140,110"],
+  ["天狼星", 8.60, "215,230,255"], ["牛郎星", 16.73, "255,248,232"], ["织女星", 25.04, "205,222,255"]
+];
+const FONT = '"Noto Serif SC", "Songti SC", "STSong", serif';
+
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const clamp01 = x => Math.min(1, Math.max(0, x));
+const smooth = (a, b, x) => { const t = clamp01((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const easeOut = t => 1 - Math.pow(1 - clamp01(t), 3);
+const easeIn = t => Math.pow(clamp01(t), 3);
+const bell = (x, c, w) => { const d = Math.abs(x - c) / w; return d >= 1 ? 0 : (1 - d * d) * (1 - d * d); };
+const rnd = (a, b) => a + Math.random() * (b - a);
+
+/* ======== 实时数字 ======== */
+const NOW = new Date();
+const BIRTH = new Date(CONFIG.birth[0], CONFIG.birth[1] - 1, CONFIG.birth[2]);
+const MET = new Date(CONFIG.met[0], CONFIG.met[1] - 1, CONFIG.met[2]);
+const AGE_Y = (NOW - BIRTH) / DAY / YR_D;
+const MET_Y = (NOW - MET) / DAY / YR_D;
+(function liveNumbers() {
+  const metDays = (NOW - MET) / DAY, metSec = metDays * 86400;
+  const set = (k, v) => $$(`[data-live="${k}"]`).forEach(el => el.textContent = v);
+  // 2024-12 → “2024 年底”，今年 3 月 → “今年春天”
+  const when = d => {
+    const y = d.getFullYear(), m = d.getMonth() + 1, thisYear = y === NOW.getFullYear();
+    const part = m === 12 ? "底" : m <= 2 ? "初" : m <= 5 ? "春天" : m <= 8 ? "夏天" : "秋天";
+    if (thisYear) return part.length === 1 ? `今年年${part}` : `今年${part}`;
+    return `${y} 年${part}`;
+  };
+  const sp = s => /^\d/.test(s) ? ` ${s}` : s;
+  const crossing = (start, ly) => new Date(start.getTime() + ly * YR_D * DAY);
+  const ly = name => STARS_LY.find(s => s[0] === name)[1];
+
+  const orbits = metDays / 365.256, frac = orbits % 1;
+  set("orbits", frac > .85 ? `快 ${Math.ceil(orbits)} 圈` : `${Math.floor(orbits)} 圈多`);
+  set("orbitKm", `约 ${Math.round(metSec * EARTH_KMS / 1e8)} 亿公里`);
+  set("galKm", `约 ${Math.round(metSec * SUN_GAL_KMS / 1e9) * 10} 亿公里`);
+
+  const moonBirth = Math.round(AGE_Y * MOON_CM_PER_YR), moonMet = Math.round(MET_Y * MOON_CM_PER_YR);
+  set("moonBirth", `${moonBirth} 厘米`);
+  set("moonMet", `${moonMet} 厘米`);
+  $("#ruler").dataset.ours = (moonMet / moonBirth * 100).toFixed(1);
+
+  set("birthLy", AGE_Y.toFixed(1));
+  set("birthPass", `它在${sp(when(crossing(BIRTH, ly("牛郎星"))))}路过了牛郎星，${when(crossing(BIRTH, ly("织女星")))}路过了织女星。`);
+  set("metLy", MET_Y.toFixed(2));
+  const next = STARS_LY.find(s => s[1] > MET_Y && s[0] !== "南门二");
+  let t = "";
+  if (MET_Y > ly("比邻星")) t += `${when(crossing(MET, ly("比邻星")))}，它越过了离太阳最近的恒星，比邻星。`;
+  if (next) t += `下一站是${next[0]}，${when(crossing(MET, next[1]))}到。`;
+  set("metPass", t);
+})();
+
+/* ======== 诗 ======== */
+let gi = 0;
+$("#poemLines").innerHTML = CONFIG.poem.map((line, li) =>
+  `<p>${[...line].map(ch => `<span style="--d:${(li * 1.2 + (gi++) * .09).toFixed(2)}s">${ch}</span>`).join("")}</p>`).join("");
+$("#poemSrc").textContent = CONFIG.poemSrc;
+
+/* ======== 站点（段落）与航程 ======== */
+const beats = $$("#stage .beat").map((el, i) => ({
+  el, i, id: el.dataset.id,
+  len: +el.dataset.len || 110,
+  travel: el.dataset.travel !== undefined ? +el.dataset.travel : 300,
+  low: el.classList.contains("low"),
+  sky: el.dataset.sky, age: el.dataset.age, mode: el.dataset.mode,
+  vis: false, played: false
+}));
+const N = beats.length;
+const idx = Object.fromEntries(beats.map(b => [b.id, b.i]));
+// 没写 data-sky / data-age 的段落，沿用上一段的
+let lastSky = "now", lastMode = "age";
+beats.forEach(b => {
+  b.skyEff = b.sky || lastSky; lastSky = b.skyEff;
+  b.modeEff = b.mode || (b.age ? "age" : lastMode); lastMode = b.modeEff;
+});
+beats[N - 1].last = true;
+const startVh = [], zStart = [];
+{ let v = 0, z = 0; beats.forEach(b => { startVh.push(v); zStart.push(z); v += b.len; z += b.travel; }); }
+const VH0 = beats[0].len * .5;               // 页面顶部 = 封面的正中
+const easeZ = u => u + .75 * Math.sin(2 * Math.PI * u) / (2 * Math.PI);  // 站点处慢、站点之间快
+function pAtVh(vh) {
+  vh += VH0;
+  let i = 0; while (i < N - 1 && vh >= startVh[i + 1]) i++;
+  return Math.min(N - 1 + .999, i + (vh - startVh[i]) / beats[i].len);
+}
+function vhAtP(p) { const i = Math.min(N - 1, Math.floor(p)); return startVh[i] + (p - i) * beats[i].len - VH0; }
+function zAtP(p) { const i = Math.min(N - 1, Math.max(0, Math.floor(p))); return zStart[i] + beats[i].travel * easeZ(clamp01(p - i)); }
+let pT = .5, pS = .5;
+const q = id => pS - idx[id];                // 相对某一站的位置
+
+let unitH = innerHeight, unitW = innerWidth, banged = false;
+const track = $("#track");
+function layoutTrack() {
+  const maxP = banged ? N - 1 + .5 : idx.gate + .5;
+  track.style.height = `${vhAtP(maxP) / 100 * unitH + innerHeight}px`;
+}
+const scrollForP = p => vhAtP(p) / 100 * unitH;
+layoutTrack();
+
+/* ======== 天空 ======== */
+const SKY = {
+  now:        { bg: [5, 7, 15],   stars: 1,   fog: 0,   col: [255, 236, 200], mote: [200, 210, 255, 0] },
+  void:       { bg: [0, 0, 0],    stars: 0,   fog: 0,   col: [255, 236, 200], mote: [200, 210, 255, 0] },
+  hot:        { bg: [30, 19, 13], stars: 0,   fog: 1,   col: [255, 226, 188], mote: [255, 240, 215, .75] },
+  warm:       { bg: [30, 14, 7],  stars: 0,   fog: .9,  col: [255, 160, 80],  mote: [255, 205, 150, .65] },
+  ember:      { bg: [22, 7, 4],   stars: 0,   fog: .85, col: [220, 80, 36],   mote: [255, 160, 110, .55] },
+  clear:      { bg: [3, 4, 9],    stars: 0,   fog: 0,   col: [220, 80, 36],   mote: [150, 160, 190, .14], rate: 4 },
+  dark:       { bg: [1, 1, 3],    stars: 0,   fog: 0,   col: [120, 140, 200], mote: [130, 140, 170, .12] },
+  firstStars: { bg: [3, 5, 13],   stars: .38, fog: 0,   col: [120, 160, 255], mote: [150, 170, 220, .1] },
+  nebula:     { bg: [14, 5, 20],  stars: .75, fog: .35, col: [205, 80, 175],  mote: [255, 170, 130, .14] },
+  gold:       { bg: [16, 10, 16], stars: .75, fog: .3,  col: [232, 182, 92],  mote: [255, 214, 130, .14] },
+  cloud:      { bg: [12, 8, 10],  stars: .7,  fog: .22, col: [170, 110, 90],  mote: [210, 170, 140, .12] },
+  sun:        { bg: [16, 10, 6],  stars: .7,  fog: .16, col: [255, 190, 110], mote: [255, 210, 160, .1] },
+  moon:       { bg: [6, 8, 15],   stars: .8,  fog: .04, col: [200, 210, 232], mote: [200, 210, 232, .08] },
+  life:       { bg: [3, 14, 20],  stars: .2,  fog: .2,  col: [60, 170, 180],  mote: [170, 230, 240, .16] },
+  calendar:   { bg: [7, 8, 13],   stars: .6,  fog: 0,   col: [200, 200, 220], mote: [200, 200, 220, .06] },
+  light:      { bg: [4, 6, 18],   stars: 1,   fog: 0,   col: [200, 210, 255], mote: [200, 210, 255, .06] },
+  dust:       { bg: [11, 7, 22],  stars: 1,   fog: .14, col: [170, 120, 225], mote: [210, 190, 255, .08] }
+};
+const cv = $("#sky"), cx = cv.getContext("2d");
+let W = 0, H = 0, DPR = 1, F = 600;
+const cur = structuredClone(SKY.now);
+let target = SKY.now;
+
+const SPREAD = 2400, DEPTH = 4000, M_SPREAD = 700, M_DEPTH = 1600;
+let stars = [], motes = [], blobs = [];
+function makeField(camZ) {
+  const n = Math.max(420, Math.min(950, Math.round(W * H / 800)));
+  stars = Array.from({ length: n }, () => {
+    const w = Math.random();
+    return {
+      x: rnd(-SPREAD, SPREAD), y: rnd(-SPREAD, SPREAD), z: camZ + Math.random() * DEPTH,
+      r: Math.pow(Math.random(), 3) * 1.4 + .45, th: Math.random(), tw: Math.random() * 6.28, sp: rnd(.4, 1.6),
+      c: w < .15 ? "255,214,170" : w < .35 ? "200,215,255" : "255,250,240", on: false, flare: 0
+    };
+  });
+  motes = Array.from({ length: 170 }, () => ({ x: rnd(-M_SPREAD, M_SPREAD), y: rnd(-M_SPREAD, M_SPREAD), z: camZ + Math.random() * M_DEPTH, j: Math.random() * 6.28 }));
+  blobs = Array.from({ length: 7 }, () => ({ x: Math.random(), y: Math.random(), r: rnd(.35, .7), vx: rnd(-.03, .03), vy: rnd(-.015, .015) }));
+}
+// 物体飞出视野后挪到另一头；跳得太远就直接重新撒
+function recycle(o, camZ, depth, spread) {
+  let dz = o.z - camZ;
+  if (dz >= 10 && dz <= depth + 10) return dz;
+  if (dz < -depth || dz > depth * 2) o.z = camZ + Math.random() * depth;
+  else o.z += dz < 10 ? depth : -depth;
+  o.x = rnd(-spread, spread); o.y = rnd(-spread, spread);
+  return o.z - camZ;
+}
+function resize() {
+  DPR = Math.min(devicePixelRatio || 1, 2);
+  W = cv.clientWidth; H = cv.clientHeight;
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  cx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  F = Math.max(W, H) * .9;
+  if (!stars.length) makeField(0);
+  // 只在宽度变化时重算滚动单位，手机地址栏伸缩不影响航程
+  if (innerWidth !== unitW) { unitW = innerWidth; unitH = innerHeight; layoutTrack(); }
+}
+
+/* ======== 宇宙微波背景纹理（值噪声 + 普朗克配色） ======== */
+const cmbTex = (function () {
+  const gw = 300, gh = 150, R = [];
+  for (let i = 0; i < 4096; i++) R.push(Math.random());
+  const hash = (x, y) => R[((x * 73856093) ^ (y * 19349663)) >>> 0 & 4095];
+  const sm = t => t * t * (3 - 2 * t);
+  const noise = (x, y) => {
+    const xi = Math.floor(x), yi = Math.floor(y), xf = sm(x - xi), yf = sm(y - yi);
+    const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+    return a + (b - a) * xf + (c - a) * yf + (a - b - c + d) * xf * yf;
+  };
+  const stops = [[0, [12, 30, 110]], [.3, [70, 150, 225]], [.5, [240, 232, 205]], [.7, [240, 150, 60]], [1, [150, 32, 22]]];
+  const pal = v => {
+    v = clamp01(v);
+    for (let i = 1; i < stops.length; i++) if (v <= stops[i][0]) {
+      const [p0, c0] = stops[i - 1], [p1, c1] = stops[i], k = (v - p0) / (p1 - p0);
+      return c0.map((ch, j) => ch + (c1[j] - ch) * k);
+    }
+    return stops[stops.length - 1][1];
+  };
+  const off = document.createElement("canvas"); off.width = gw; off.height = gh;
+  const og = off.getContext("2d"), img = og.createImageData(gw, gh);
+  for (let y = 0; y < gh; y++) for (let x = 0; x < gw; x++) {
+    let v = 0, amp = 1, f = .045, tot = 0;
+    for (let o = 0; o < 5; o++) { v += noise(x * f + o * 31, y * f + o * 17) * amp; tot += amp; amp *= .55; f *= 2.1; }
+    v = (v / tot - .5) * 2.4 + .5;
+    const [r, g, b] = pal(v), i = (y * gw + x) * 4;
+    img.data[i] = r; img.data[i + 1] = g; img.data[i + 2] = b; img.data[i + 3] = 255;
+  }
+  og.putImageData(img, 0, 0);
+  return off;
+})();
+
+/* ======== 场景 ======== */
+let flash = 0;                         // 本帧需要的白闪
+const S = () => Math.min(W, H * .75);
+const focusY = () => H * .32;          // 有画面时，物体在上，文字在下
+
+function glow(x, y, r, rgb, a) {
+  if (a <= 0 || r <= 0) return;
+  const g = cx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, `rgba(${rgb},${a})`); g.addColorStop(1, `rgba(${rgb},0)`);
+  cx.fillStyle = g; cx.beginPath(); cx.arc(x, y, r, 0, 6.283); cx.fill();
+}
+function disc(x, y, r, fill) { if (r <= 0) return; cx.fillStyle = fill; cx.beginPath(); cx.arc(x, y, r, 0, 6.283); cx.fill(); }
+
+// —— 第一章：冲破雾墙，迎面是宇宙微波背景，再从它中间穿过去 ——
+function sceneCMB() {
+  const k = q("c1g"); if (k < -.2 || k > 3.2) return;
+  flash += bell(k, .2, .22) * .75;
+  if (k < .5) return;
+  let sc, a = smooth(.5, .8, k);
+  if (k < 1.5) sc = lerp(.06, .92, easeOut((k - .5) / 1));
+  else if (k < 2.25) sc = lerp(.92, 1, (k - 1.5) / .75);
+  else { const m = (k - 2.25) / .7; sc = 1 + m * m * 7; a *= 1 - clamp01(m); }
+  if (a <= 0) return;
+  const w = Math.min(W * .88, 560) * sc, h = w / 2;
+  const x = W / 2, y = lerp(focusY(), H / 2, smooth(2, 2.8, k));
+  cx.save(); cx.globalAlpha = a;
+  cx.beginPath(); cx.ellipse(x, y, w / 2, h / 2, 0, 0, 6.283);
+  cx.save(); cx.clip(); cx.drawImage(cmbTex, x - w / 2, y - h / 2, w, h); cx.restore();
+  cx.strokeStyle = "rgba(236,230,218,.3)"; cx.lineWidth = 1; cx.stroke();
+  if (sc > .8 && sc < 1.15) {
+    cx.globalAlpha = a * smooth(.8, .9, sc) * (1 - smooth(1.05, 1.15, sc));
+    cx.fillStyle = "rgba(236,230,218,.55)"; cx.font = `12px ${FONT}`;
+    cx.textAlign = "center"; cx.fillText("宇宙微波背景 · 示意图", x, y + h / 2 + 24);
+  }
+  cx.restore();
+}
+
+// —— 第二、三章：一颗恒星 —— 熔炉 → 塌缩 → 超新星 ——
+const LAYERS = [["氢", "#9cc8ff"], ["氦", "#d4e8ff"], ["碳", "#ffe7ad"], ["氧", "#ffc66e"], ["氖", "#ffa45c"], ["镁", "#ff8452"], ["硅", "#e2603e"], ["铁", "#7d3a30"]];
+let tapLevel = 0, tapAt = -9e3;
+const debris = Array.from({ length: 380 }, () => ({ a: Math.random() * 6.283, v: rnd(.25, 1.25), s: rnd(.6, 2.2), c: Math.random() < .4 ? "255,170,110" : Math.random() < .6 ? "255,245,230" : "130,220,230" }));
+const starBtn = $("#starBtn"), furnace = $("#furnace"), chips = $("#chips"), furnaceTip = $("#furnaceTip");
+chips.innerHTML = LAYERS.map(([n, c]) => `<span style="--c:${c}">${n}</span>`).join("");
+const chipEls = $$("span", chips);
+starBtn.addEventListener("click", () => { if (tapLevel < 7) { tapLevel++; tapAt = performance.now(); } });
+const EXPLODE = 4.16;   // 相对 c2c：c3a 段落刚开始出现时
+function sceneStar(t) {
+  const k = q("c2c");
+  const uiOn = k > .35 && k < 2.95;
+  furnace.style.opacity = uiOn ? (smooth(.35, .6, k) * (1 - smooth(2.6, 2.95, k))).toFixed(3) : 0;
+  starBtn.classList.toggle("on", k > .3 && k < 2.2 && tapLevel < 7);
+  if (k < -.4 || k > 7.4) return;
+  const s = S(), R0 = s * .2, x = W / 2, y = focusY();
+  let R = lerp(s * .006, R0, easeOut((k + .4) / .9));
+  const auto = Math.round(clamp01((k - 1.3) / .55) * 7);
+  const level = Math.max(tapLevel, auto);
+  furnace.style.top = `${y + R0 + 20}px`;
+  chipEls.forEach((el, i) => el.classList.toggle("lit", i <= level));
+  furnaceTip.classList.toggle("pulse", level === 0);
+  furnaceTip.textContent = level === 0 ? "点一下这颗星" : level < 7 ? `${LAYERS[level - 1][0]} → ${LAYERS[level][0]}` : "铁 · 熔炉熄火";
+  starBtn.style.transform = `translate(${x - R0}px, ${y - R0}px)`;
+  starBtn.style.width = starBtn.style.height = `${R0 * 2}px`;
+
+  if (k < EXPLODE) {
+    const collapse = smooth(3.9, EXPLODE, k);
+    R *= lerp(1, .05, collapse);
+    const dead = level === 7 ? smooth(1.9, 2.6, k) : 0;
+    const pulse = Math.max(0, 1 - (performance.now() - tapAt) / 700);
+    glow(x, y, R * (2.8 + pulse * .8), dead ? "255,190,150" : "170,205,255", .32 * (1 - dead * .4) + pulse * .2);
+    for (let j = 0; j <= level; j++) {
+      disc(x, y, R * (1 - j * .105), LAYERS[j][1]);
+      if (j) { cx.strokeStyle = "rgba(0,0,0,.18)"; cx.lineWidth = 1; cx.stroke(); }
+    }
+    if (dead) disc(x, y, R * .26 * (1 + .06 * Math.sin(t / 90)), `rgba(60,25,20,${dead * .7})`);
+    cx.fillStyle = "rgba(255,255,255,.14)"; cx.beginPath(); cx.arc(x - R * .3, y - R * .32, R * .32, 0, 6.283); cx.fill();
+    if (collapse > .9) flash += (collapse - .9) * 4;
+  } else {
+    const e = k - EXPLODE, d = Math.hypot(W, H);
+    flash += bell(e, .04, .14);
+    const na = .55 * (1 - smooth(1.6, 3, e));
+    if (na > 0) { glow(x, y, s * (.3 + e * .2), "220,90,170", na * .5); glow(x, y, s * (.18 + e * .12), "120,220,230", na * .4); }
+    const ra = 1 - smooth(.2, 1.5, e);
+    if (ra > 0) { cx.strokeStyle = `rgba(255,236,210,${ra * .8})`; cx.lineWidth = 2 + e * 6; cx.beginPath(); cx.arc(x, y, e * d * .9, 0, 6.283); cx.stroke(); }
+    // 碎片朝你飞来（位置只由 e 决定，倒着滑也对得上）
+    const life = 1 - e / 2.6;
+    if (life > 0) {
+      cx.globalCompositeOperation = "lighter";
+      for (const p of debris) {
+        const dist = p.v * e * (1 + e * 1.6) * s * .5, z = Math.min(2.4, p.s * .6 * (1 + e));
+        disc(x + Math.cos(p.a) * dist, y + Math.sin(p.a) * dist * .8, z, `rgba(${p.c},${life})`);
+      }
+      cx.globalCompositeOperation = "source-over";
+    }
+  }
+}
+
+// —— 第三章：两颗中子星，绕转、相撞 ——
+const goldBits = Array.from({ length: 300 }, () => ({ a: Math.random() * 6.283, v: rnd(.2, 1.2), s: rnd(.8, 2.4) }));
+let nsAng = 0;
+function sceneNeutron(t, dt) {
+  const k = q("c3e"); if (k < -.4 || k > 3.3) return;
+  const s = S(), x = W / 2, y = focusY(), HIT = 1.15;
+  const appear = smooth(-.4, .1, k);
+  if (k < HIT) {
+    const p = clamp01((k + .3) / (HIT + .3));
+    const sep = s * .22 * Math.pow(1 - p, .6) + 3;
+    nsAng += dt * (1.2 + 26 * Math.pow(p, 4));
+    // 引力波：一圈圈越来越密的涟漪
+    cx.lineWidth = 1;
+    for (let i = 0; i < 6; i++) {
+      const r = (t / 1000 * (60 + 300 * p) + i * s * .12) % (s * .75);
+      cx.strokeStyle = `rgba(190,215,255,${appear * .22 * (1 - r / (s * .75))})`;
+      cx.beginPath(); cx.ellipse(x, y, r, r * .55, 0, 0, 6.283); cx.stroke();
+    }
+    for (const sgn of [1, -1]) {
+      const px = x + Math.cos(nsAng) * sep * sgn, py = y + Math.sin(nsAng) * sep * .55 * sgn;
+      glow(px, py, s * .07, "200,225,255", .5 * appear);
+      disc(px, py, s * .022, `rgba(240,248,255,${appear})`);
+    }
+  } else {
+    const e = k - HIT;
+    flash += bell(e, .03, .12) * .9;
+    const ga = 1 - smooth(1.2, 2.2, e);
+    if (ga > 0) { glow(x, y, s * (.15 + e * .25), "255,200,90", .6 * ga); glow(x, y, s * (.3 + e * .3), "230,90,60", .25 * ga); }
+    const life = 1 - e / 2.1;
+    if (life > 0) {
+      cx.globalCompositeOperation = "lighter";
+      for (const p of goldBits) {
+        const dist = p.v * e * (1 + e * 1.4) * s * .55, z = Math.min(2.2, p.s * .55 * (1 + e));
+        disc(x + Math.cos(p.a) * dist, y + Math.sin(p.a) * dist * .8, z, `rgba(255,${200 + (p.s * 20 | 0)},110,${life})`);
+      }
+      cx.globalCompositeOperation = "source-over";
+    }
+  }
+}
+
+// —— 第四章：星云塌缩，太阳点亮，行星成形 ——
+const dust = Array.from({ length: 520 }, () => {
+  const r = Math.pow(Math.random(), .7);
+  return { r, a: Math.random() * 6.283, h: rnd(-1, 1), s: rnd(.6, 1.8), c: Math.random() < .5 ? "214,160,120" : Math.random() < .5 ? "170,130,200" : "240,200,150" };
+});
+const PLANETS = [[.10, 1.6, "#b9a89a"], [.145, 2.6, "#e8c48a"], [.2, 3, "#4f8fd6"], [.26, 2.2, "#d0724a"], [.34, 6, "#d9b48a"], [.41, 5.2, "#e6d1a0"], [.47, 3.6, "#9fd3dc"], [.53, 3.4, "#6d8fe0"]];
+let solarT = 0;
+function sceneSolar(t, dt) {
+  const k = q("c4h"); if (k < -.4 || k > 5.4) return;
+  const s = S(), x = W / 2, y = focusY(), FL = .36, u = s / 375;
+  const fadeIn = smooth(-.4, .3, k), fadeOut = 1 - smooth(4.9, 5.4, k);
+  const disk = smooth(1.3, 2.7, k);           // 云 → 盘
+  const ign = smooth(2.25, 2.7, k);           // 太阳点亮
+  const plan = smooth(2.9, 3.4, k);           // 行星出现
+  solarT += dt * (.25 + disk * .9);
+  flash += bell(k, 2.45, .12) * .35;
+  const dA = fadeIn * fadeOut * (1 - plan * .65);
+  if (dA > 0) for (const p of dust) {
+    const rr = s * .52 * lerp(p.r, Math.max(.06, p.r) * .95, disk) * (1 - .15 * disk);
+    const ang = p.a + solarT * (disk ? .6 / Math.sqrt(p.r + .08) : .15);
+    const flat = lerp(.8 + p.h * .25, FL, disk);
+    cx.fillStyle = `rgba(${p.c},${dA * .6})`;
+    cx.fillRect(x + Math.cos(ang) * rr, y + Math.sin(ang) * rr * flat + p.h * s * .06 * (1 - disk), p.s, p.s);
+  }
+  const core = lerp(.25, 1, ign);
+  glow(x, y, s * lerp(.18, .32, ign), ign > .01 ? "255,190,100" : "200,140,120", .45 * core * fadeOut * fadeIn);
+  if (ign > 0) {
+    const R = s * .055 * ign;
+    disc(x, y, R * 1.25, `rgba(255,200,110,${.35 * fadeOut})`);
+    const g = cx.createRadialGradient(x - R * .3, y - R * .3, R * .1, x, y, R);
+    g.addColorStop(0, `rgba(255,248,215,${fadeOut})`); g.addColorStop(.6, `rgba(255,205,105,${fadeOut})`); g.addColorStop(1, `rgba(245,150,60,${fadeOut})`);
+    disc(x, y, R, g);
+  }
+  if (plan > 0) {
+    PLANETS.forEach(([a, r, col], i) => {
+      const A = a * s * 1.5, earth = i === 2;
+      const hl = earth ? smooth(3.3, 3.7, k) : 0;
+      const orbitHl = earth ? smooth(3.95, 4.2, k) : 0;
+      cx.strokeStyle = orbitHl ? `rgba(230,200,145,${(.15 + .55 * orbitHl) * plan * fadeOut})` : `rgba(236,230,218,${.1 * plan * fadeOut})`;
+      cx.lineWidth = orbitHl ? 1.4 : 1;
+      cx.beginPath(); cx.ellipse(x, y, A, A * FL, 0, 0, 6.283); cx.stroke();
+      const ang = 1.3 + i * 2.1 + solarT * .9 / Math.pow(a / .2, 1.5);
+      const px = x + Math.cos(ang) * A, py = y + Math.sin(ang) * A * FL;
+      cx.globalAlpha = plan * fadeOut;
+      disc(px, py, r * (earth ? 1 + .3 * hl : 1) * u, col);
+      if (hl) {
+        cx.strokeStyle = `rgba(230,200,145,${hl})`; cx.lineWidth = 1;
+        cx.beginPath(); cx.arc(px, py, 10 * u + 2 * Math.sin(t / 300), 0, 6.283); cx.stroke();
+        cx.fillStyle = `rgba(230,200,145,${hl})`; cx.font = `13px ${FONT}`;
+        cx.textAlign = "center"; cx.fillText("地球", px, py - 16 * u - 4);
+      }
+      cx.globalAlpha = 1;
+    });
+  }
+}
+
+// —— 第五章：大碰撞，月亮诞生，然后慢慢退远 ——
+const moonBits = Array.from({ length: 170 }, () => ({ a: Math.random() * 6.283, d: rnd(.9, 1.15), s: rnd(.8, 2) }));
+const continents = Array.from({ length: 9 }, () => ({ a: Math.random() * 6.283, r: rnd(.2, .75), s: rnd(.18, .38) }));
+let moonT = 0;
+function mixHex(a, b, k) {
+  const pa = a.match(/\w\w/g).map(h => parseInt(h, 16)), pb = b.match(/\w\w/g).map(h => parseInt(h, 16));
+  return `rgb(${pa.map((v, i) => Math.round(lerp(v, pb[i], k))).join(",")})`;
+}
+function sceneMoon(t, dt) {
+  const k = q("c5h"); if (k < -.4 || k > 6.4) return;
+  const s = S(), x = W / 2, y = focusY(), Re = s * .1, HIT = 1.18;
+  const A = smooth(-.4, .2, k) * (1 - smooth(5.9, 6.4, k));
+  moonT += dt * .35;
+  const cool = smooth(2, 4.2, k), ex = k - HIT;
+  const dist = Re * lerp(2.3, 4.4, smooth(3.2, 4.9, k));
+  const mAng = moonT * .9;
+  const mx = x + Math.cos(mAng) * dist, my = y + Math.sin(mAng) * dist * .42;
+  const ma = smooth(.9, 1.2, ex), behind = Math.sin(mAng) < 0;
+  const drawMoon = () => {
+    if (ma <= 0) return;
+    cx.globalAlpha = A * ma;
+    disc(mx, my, Re * .27, "#cfcabf");
+    disc(mx - Re * .06, my - Re * .04, Re * .08, "rgba(120,115,108,.45)");
+    disc(mx + Re * .08, my + Re * .06, Re * .05, "rgba(120,115,108,.35)");
+    cx.globalAlpha = A;
+  };
+  cx.save(); cx.globalAlpha = A;
+  if (ma > 0 && k > 3.2) { cx.strokeStyle = `rgba(236,230,218,${.12 * ma})`; cx.lineWidth = 1; cx.beginPath(); cx.ellipse(x, y, dist, dist * .42, 0, 0, 6.283); cx.stroke(); }
+  if (behind) drawMoon();
+  // 地球：先是熔岩，慢慢冷却出海洋
+  glow(x, y, Re * 2.2, cool > .5 ? "90,150,230" : "255,120,60", .25);
+  disc(x, y, Re, mixHex("7a2a17", "2f6fb5", cool));
+  cx.save(); cx.beginPath(); cx.arc(x, y, Re, 0, 6.283); cx.clip();
+  continents.forEach(c => {
+    const px = x + Math.cos(c.a + moonT * .3) * c.r * Re, py = y + Math.sin(c.a) * c.r * Re * .8;
+    disc(px, py, c.s * Re, cool < .5 ? `rgba(255,150,60,${.55 * (1 - cool * 2)})` : `rgba(96,150,90,${(cool - .5) * 1.6})`);
+  });
+  const sh = cx.createLinearGradient(x - Re, y - Re, x + Re, y + Re);
+  sh.addColorStop(.45, "rgba(0,0,0,0)"); sh.addColorStop(1, "rgba(0,0,0,.5)");
+  cx.fillStyle = sh; cx.fillRect(x - Re, y - Re, Re * 2, Re * 2);
+  cx.restore();
+  if (!behind) drawMoon();
+  // 撞上来的天体
+  if (k < HIT + .05) {
+    const p = easeIn((k + .4) / (HIT + .4));
+    const sx = lerp(-Re * 2, x - Re * .8, p), sy = lerp(-Re * 1.5, y - Re * .6, p);
+    disc(sx, sy, Re * .5, "#a8664a");
+    disc(sx + Re * .12, sy + Re * .12, Re * .45, "rgba(0,0,0,.3)");
+  }
+  flash += bell(k, HIT + .03, .14) * .7;
+  // 碎片环 → 聚成月亮
+  if (ex > 0 && ex < 1.3) {
+    const gather = smooth(.55, 1.2, ex), spread = Math.min(1, ex * 2.2);
+    for (const b of moonBits) {
+      let bx, by;
+      if (spread < 1) { bx = x - Re * .8 + Math.cos(b.a) * Re * 2.3 * b.d * spread; by = y - Re * .6 + Math.sin(b.a) * Re * 2.3 * b.d * .42 * spread; }
+      else { bx = x + Math.cos(b.a + moonT) * Re * 2.3 * b.d; by = y + Math.sin(b.a + moonT) * Re * 2.3 * b.d * .42; }
+      cx.fillStyle = `rgba(230,200,170,${1 - gather * .8})`;
+      cx.fillRect(lerp(bx, mx, gather), lerp(by, my, gather), b.s, b.s);
+    }
+  }
+  // 激光测月：一束绿光来回
+  const laser = ma * smooth(2.9, 3.2, k) * (1 - smooth(3.9, 4.2, k));
+  if (laser > 0) {
+    const ph = (t / 1400) % 2, f = ph < 1 ? ph : 2 - ph;
+    cx.strokeStyle = `rgba(110,255,150,${.2 * laser})`; cx.lineWidth = 1;
+    cx.beginPath(); cx.moveTo(x, y); cx.lineTo(mx, my); cx.stroke();
+    disc(lerp(x, mx, f), lerp(y, my, f), 2.4, `rgba(140,255,170,${laser})`);
+  }
+  cx.restore();
+}
+
+// —— 第六章：早期海洋，会复制自己的分子 ——
+let chains = [], chainClock = 0;
+const bubbles = Array.from({ length: 46 }, () => ({ x: Math.random(), y: Math.random(), r: rnd(.8, 2.6), v: rnd(.02, .07) }));
+const newChain = (x, y, hue) => ({ x, y, vx: rnd(-6, 6), vy: rnd(-4, 4), n: 5 + (Math.random() * 3 | 0), hue, born: performance.now(), ph: Math.random() * 6 });
+function sceneOcean(t, dt) {
+  const k = q("c6h"); if (k < -.4 || k > 4.4) { chains = []; return; }
+  const A = smooth(-.4, .3, k) * (1 - smooth(3.8, 4.4, k));
+  const s = S(), cxp = W / 2, cyp = focusY();
+  const g = cx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, `rgba(70,170,180,${.22 * A})`); g.addColorStop(1, `rgba(2,20,30,${.55 * A})`);
+  cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+  cx.globalCompositeOperation = "lighter";
+  for (let i = 0; i < 4; i++) {
+    const bx = W * (.15 + i * .25) + Math.sin(t / 3000 + i) * 30;
+    const lg = cx.createLinearGradient(0, 0, 0, H * .8);
+    lg.addColorStop(0, `rgba(170,240,240,${.07 * A})`); lg.addColorStop(1, "rgba(170,240,240,0)");
+    cx.fillStyle = lg; cx.beginPath();
+    cx.moveTo(bx - 20, 0); cx.lineTo(bx + 20, 0); cx.lineTo(bx + 90, H * .8); cx.lineTo(bx - 30, H * .8); cx.fill();
+  }
+  cx.globalCompositeOperation = "source-over";
+  cx.lineWidth = .8;
+  for (const b of bubbles) {
+    b.y -= b.v * dt; if (b.y < -.05) { b.y = 1.05; b.x = Math.random(); }
+    cx.strokeStyle = `rgba(200,250,250,${.35 * A})`;
+    cx.beginPath(); cx.arc(b.x * W + Math.sin(t / 900 + b.r * 9) * 4, b.y * H, b.r, 0, 6.283); cx.stroke();
+  }
+  if (!chains.length) chains.push(newChain(cxp, cyp, 175));
+  chainClock += dt;
+  if (k > .5 && k < 3.6 && chainClock > 2.2 && chains.length < 14) {
+    chainClock = 0;
+    const src = chains[Math.random() * chains.length | 0];
+    chains.push(newChain(src.x + rnd(-30, 30), src.y + rnd(-20, 20), src.hue + rnd(-25, 25)));
+  }
+  for (const c of chains) {
+    c.x += c.vx * dt; c.y += c.vy * dt;
+    if (Math.abs(c.x - cxp) > s * .42) c.vx = -Math.sign(c.x - cxp) * Math.abs(c.vx);
+    if (Math.abs(c.y - cyp) > s * .28) c.vy = -Math.sign(c.y - cyp) * Math.abs(c.vy);
+    const born = clamp01((performance.now() - c.born) / 1200);
+    const pts = [];
+    for (let i = 0; i < c.n; i++) pts.push([c.x + (i - c.n / 2) * 9, c.y + Math.sin(t / 600 + c.ph + i * .9) * 5]);
+    cx.strokeStyle = `hsla(${c.hue},70%,70%,${.5 * A * born})`; cx.lineWidth = 1.2;
+    cx.beginPath(); pts.forEach(([px, py], i) => i ? cx.lineTo(px, py) : cx.moveTo(px, py)); cx.stroke();
+    pts.forEach(([px, py]) => { glow(px, py, 7, "160,255,240", .25 * A * born); disc(px, py, 2.3, `hsla(${c.hue},80%,78%,${A * born})`); });
+  }
+}
+
+// —— 第八章：从地球出发往外飞，路过一颗颗有名字的星 ——
+let lyNow = 0;
+function lyAt(p) {
+  const a = idx.c8a, b = idx.c8b, c = idx.c8c;
+  if (p < a) return 0;
+  if (p < b) return .3 * smooth(a + .2, a + .9, p);
+  if (p < c) return lerp(.3, MET_Y, smooth(b + .1, b + .6, p));
+  return lerp(MET_Y, AGE_Y, smooth(c + .1, c + .62, p));
+}
+function sceneLight(t) {
+  const k = q("c8h"); if (k < -.4 || k > 4.5) return;
+  const A = smooth(-.4, .2, k);
+  const s = S(), x = W / 2, y = focusY(), ly = lyNow;
+  // 身后的地球越来越小
+  const er = s * .09 / (1 + ly * 25), ea = A * (1 - smooth(1.2, 2.2, k));
+  if (ea > 0) { glow(x, y, er * 3 + 4, "120,170,255", .4 * ea); disc(x, y, Math.max(1.2, er), `rgba(80,140,230,${ea})`); }
+  // 有名字的星，从身边掠过
+  STARS_LY.forEach(([name, d, rgb], i) => {
+    if (name === "南门二") return;
+    const dz = Math.log(d) - Math.log(Math.max(ly, .08));
+    if (dz < -.12 || dz > .9) return;
+    const near = 1 / (dz + .18), side = i % 2 ? 1 : -1;
+    const px = x + side * s * .09 * near, py = y + (i % 3 - 1) * s * .03 * near;
+    const a = A * (1 - smooth(.55, .9, dz)) * (dz < 0 ? 1 + dz / .12 : 1);
+    if (a <= 0) return;
+    glow(px, py, 6 + near * 9, rgb, .55 * a);
+    disc(px, py, 1.2 + near * 1.1, `rgba(${rgb},${a})`);
+    const lx = px + side * (12 + near * 4);
+    cx.textAlign = side > 0 ? "left" : "right";
+    cx.fillStyle = `rgba(236,230,218,${a * .85})`; cx.font = `13px ${FONT}`; cx.fillText(name, lx, py - 2);
+    cx.fillStyle = `rgba(230,200,145,${a * .8})`; cx.font = `italic 13px ${FONT}`; cx.fillText(`${d.toFixed(2)} 光年`, lx, py + 15);
+  });
+  // 那一天的光，此刻在这里
+  [idx.c8b, idx.c8c].forEach(bi => {
+    const a = smooth(bi + .45, bi + .62, pS) * (1 - smooth(bi + .85, bi + 1, pS));
+    if (a <= 0) return;
+    for (let i = 0; i < 3; i++) {
+      const ph = ((t / 2200) + i / 3) % 1;
+      cx.strokeStyle = `rgba(230,200,145,${a * (1 - ph) * .6})`; cx.lineWidth = 1;
+      cx.beginPath(); cx.arc(x, y, 8 + ph * s * .35, 0, 6.283); cx.stroke();
+    }
+    disc(x, y, 3, `rgba(255,236,200,${a})`);
+  });
+}
+
+// —— 尾声：星尘聚成一个人 ——
+const EL = [
+  { n: "氧", w: "约 65%", c: "143,199,255", m: .65, ch: "第二章 · 恒星熔炉", go: "c2c" },
+  { n: "碳", w: "约 18%", c: "242,194,123", m: .18, ch: "第二章 · 恒星熔炉", go: "c2c" },
+  { n: "氢", w: "约 10%", c: "255,255,255", m: .10, ch: "第一章 · 宇宙最初的几分钟", go: "c1d" },
+  { n: "氮", w: "约 3%", c: "184,162,255", m: .03, ch: "第二章 · 恒星熔炉", go: "c2c" },
+  { n: "钙", w: "约 1.5%", c: "245,231,198", m: .015, ch: "第三章 · 超新星。在你的骨骼和牙齿里", go: "c3a" },
+  { n: "磷", w: "约 1%", c: "143,227,168", m: .01, ch: "第三章 · 超新星。在你的 DNA 里", go: "c3a" },
+  { n: "铁", w: "约 3 克", c: "255,122,77", m: 0, ch: "第三章 · 超新星。在你的血液里", go: "c3a" }
+];
+const figure = (function () {
+  const c = document.createElement("canvas"); c.width = 200; c.height = 320;
+  const g = c.getContext("2d");
+  g.fillStyle = "#fff"; g.strokeStyle = "#fff"; g.lineCap = "round";
+  g.beginPath(); g.ellipse(100, 40, 21, 25, 0, 0, 6.283); g.fill();
+  g.fillRect(93, 60, 14, 18);
+  g.beginPath();
+  g.moveTo(62, 86); g.quadraticCurveTo(100, 74, 138, 86);
+  g.quadraticCurveTo(130, 130, 124, 160); g.quadraticCurveTo(132, 178, 132, 190);
+  g.lineTo(68, 190); g.quadraticCurveTo(68, 178, 76, 160); g.quadraticCurveTo(70, 130, 62, 86);
+  g.closePath(); g.fill();
+  g.lineWidth = 14; g.beginPath(); g.moveTo(66, 92); g.quadraticCurveTo(54, 140, 52, 186); g.moveTo(134, 92); g.quadraticCurveTo(146, 140, 148, 186); g.stroke();
+  g.lineWidth = 20; g.beginPath(); g.moveTo(84, 186); g.lineTo(86, 312); g.moveTo(116, 186); g.lineTo(114, 312); g.stroke();
+  const d = g.getImageData(0, 0, 200, 320).data, pts = [];
+  for (let y = 0; y < 320; y += 3) for (let x = 0; x < 200; x += 3) if (d[(y * 200 + x) * 4 + 3] > 128) pts.push([x + rnd(-1.5, 1.5), y + rnd(-1.5, 1.5)]);
+  for (let i = pts.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [pts[i], pts[j]] = [pts[j], pts[i]]; }
+  // 按重量分配元素；小的至少给几颗，才看得见
+  const total = pts.length, counts = EL.map(e => Math.max(10, Math.round(e.m * total)));
+  counts[0] -= counts.reduce((a, b) => a + b, 0) - total;
+  const out = []; let at = 0;
+  EL.forEach((e, ei) => {
+    for (let i = 0; i < counts[ei] && at < total; i++, at++) {
+      const [tx, ty] = pts[at];
+      out.push({ tx, ty, sa: Math.random() * 6.283, sf: rnd(.9, 1.6), e: ei, tw: Math.random() * 6.28, up: Math.random(), side: rnd(-1, 1) });
+    }
+  });
+  return out;
+})();
+let selEl = -1;
+function sceneDust(t) {
+  const k = q("c9h"); if (k < -.4 || k > 5) return;
+  const gather = easeOut((k + .3) / 1.9), leave = smooth(3.9, 5, k);
+  const hgt = Math.min(H * .44, W * 1.05), sc = hgt / 320;
+  const ox = W / 2 - 100 * sc, oy = focusY() - 160 * sc + H * .02, far = Math.max(W, H);
+  const base = smooth(-.3, .4, k) * (1 - leave);
+  cx.globalCompositeOperation = "lighter";
+  for (const p of figure) {
+    const sx = W / 2 + Math.cos(p.sa) * far * p.sf, sy = H / 2 + Math.sin(p.sa) * far * p.sf;
+    const px = lerp(sx, ox + p.tx * sc, gather) + Math.sin(t / 1300 + p.tw) * 1.2 + p.side * leave * W * .5;
+    const py = lerp(sy, oy + p.ty * sc, gather) + Math.cos(t / 1500 + p.tw) * 1.2 - leave * H * (.3 + p.up * .5);
+    let a = (.55 + .45 * Math.sin(t / 700 + p.tw)) * base, z = 1.6;
+    if (selEl >= 0) { if (selEl === p.e) { a = Math.min(1, a + .4); z = 3; } else a *= .14; }
+    if (a <= 0) continue;
+    cx.fillStyle = `rgba(${EL[p.e].c},${a})`;
+    cx.fillRect(px - z / 2, py - z / 2, z, z);
+  }
+  cx.globalCompositeOperation = "source-over";
+}
+
+/* ======== 身体里的星尘：元素按钮 ======== */
+const elsBox = $("#els"), elCap = $("#elCap");
+elsBox.innerHTML = EL.map((e, i) => `<button type="button" data-i="${i}" style="--c:rgb(${e.c})">${e.n}<small>${e.w}</small></button>`).join("");
+elsBox.addEventListener("click", ev => {
+  const b = ev.target.closest("button"); if (!b) return;
+  const i = +b.dataset.i;
+  selEl = selEl === i ? -1 : i;
+  $$("button", elsBox).forEach(x => x.classList.toggle("sel", +x.dataset.i === selEl));
+  if (selEl < 0) { elCap.textContent = "点一下，看它从哪里来"; return; }
+  const e = EL[selEl];
+  elCap.innerHTML = `${e.n}，来自${e.ch}<button type="button" id="goBack">回去看看</button>`;
+  $("#goBack").addEventListener("click", () => jumpTo(e.go, .5));
+});
+
+/* ======== 宇宙日历 ======== */
+const YEAR_S = 365 * 86400;
+const calTime = v => {
+  if (v <= .62) return v / .62 * 364 * 86400;
+  if (v <= .78) return 364 * 86400 + (v - .62) / .16 * 23 * 3600;
+  if (v <= .92) return 364 * 86400 + 23 * 3600 + (v - .78) / .14 * 59 * 60;
+  return YEAR_S - 60 * Math.pow(1 - (v - .92) / .08, 3);
+};
+const calV = s => { let lo = 0, hi = 1; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (calTime(m) < s) lo = m; else hi = m; } return (lo + hi) / 2; };
+const sOfAgo = ya => YEAR_S * (1 - ya / UNIVERSE_YR);
+const CAL_EV = [
+  ["大爆炸", 0], ["第一批恒星亮了", sOfAgo(UNIVERSE_YR - 2e8)], ["太阳系诞生", sOfAgo(4.6e9)], ["最早的生命", sOfAgo(3.8e9)],
+  ["恐龙灭绝", sOfAgo(6.6e7)], ["智人出现", sOfAgo(3e5)], ["人类发明文字", sOfAgo(5500)], [`你的 ${Math.floor(AGE_Y)} 年`, sOfAgo(AGE_Y)]
+].map(([n, s]) => ({ n, s, v: s === 0 ? 0 : calV(s) }));
+$("#calTicks").innerHTML = CAL_EV.slice(1).map(e => `<i style="left:${(e.v * 100).toFixed(2)}%"></i>`).join("");
+const calRange = $("#calRange"), calNow = $("#calNow"), calAgo = $("#calAgo"), calEv = $("#calEv"), calKnob = $("#calKnob");
+const pad = n => String(n).padStart(2, "0");
+function renderCal() {
+  const v = +calRange.value, s = calTime(v), rem = YEAR_S - s;
+  calKnob.style.left = `${v * 100}%`;
+  const d = new Date(2026, 0, 1); d.setSeconds(Math.floor(s));
+  let main = `${d.getMonth() + 1}<span class="cn">月</span>${d.getDate()}<span class="cn">日</span>`;
+  if (rem <= 1e-6) main = `<span class="cn">午夜 · 现在</span>`;
+  else if (rem < 60) main = `<span class="cn">午夜前</span>${rem < 1 ? rem.toFixed(2) : Math.round(rem)}<span class="cn">秒</span>`;
+  else if (s >= 364 * 86400) main = `12<span class="cn">月</span>31<span class="cn">日</span>${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  calNow.innerHTML = main;
+  const ya = rem / YEAR_S * UNIVERSE_YR;
+  calAgo.textContent = rem <= 1e-6 ? "此刻" : ya >= 1e8 ? `${(ya / 1e8).toFixed(ya >= 1e9 ? 0 : 1)} 亿年前` : ya >= 1e4 ? `${Math.round(ya / 1e4)} 万年前` : `${Math.round(ya)} 年前`;
+  let best = null, bd = .02;
+  for (const e of CAL_EV) { const dd = Math.abs(e.v - v); if (dd < bd) { bd = dd; best = e; } }
+  calEv.textContent = best ? best.n : "";
+}
+calRange.addEventListener("input", renderCal);
+renderCal();
+
+/* ======== 宇宙时钟 ======== */
+const clock = $("#clock"), clockL = $("#clockL"), vEl = $("#clockV"), uEl = $("#clockU");
+const parseAge = s => s.endsWith("y") ? parseFloat(s) * YS : parseFloat(s);
+function fmt(sec) {
+  const y = sec / YS;
+  const tidy = v => (v < 10 && Math.abs(v - Math.round(v)) > .05) ? v.toFixed(1) : String(Math.round(v));
+  if (sec < .01) return [`10<sup>${String(Math.round(Math.log10(sec))).replace("-", "−")}</sup>`, "秒"];
+  if (sec < 1) return [sec.toFixed(2), "秒"];
+  if (sec < 60) return [String(Math.round(sec)), "秒"];
+  if (sec < 3600) return [String(Math.round(sec / 60)), "分钟"];
+  if (sec < 86400) return [String(Math.round(sec / 3600)), "小时"];
+  if (sec < YS) return [String(Math.round(sec / 86400)), "天"];
+  if (y < 1e4) return [String(Math.round(y)), "年"];
+  if (y < 1e8) return [tidy(y / 1e4), "万年"];
+  return [tidy(y / 1e8), "亿年"];
+}
+let ageNow = 1e-43, ageAnim = 0, clockMode = "age";
+function renderAge(sec) { const [v, u] = fmt(sec); vEl.innerHTML = v; uEl.textContent = u; }
+function setAge(sec, instant) {
+  cancelAnimationFrame(ageAnim);
+  if (instant || reduceMotion) { ageNow = sec; renderAge(sec); return; }
+  const from = Math.log10(ageNow), to = Math.log10(sec), t0 = performance.now();
+  const dur = Math.min(2200, 700 + Math.abs(to - from) * 60);
+  const step = t => {
+    const p = Math.min(1, (t - t0) / dur), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    ageNow = Math.pow(10, from + (to - from) * e);
+    if (clockMode === "age") renderAge(ageNow);
+    if (p < 1) ageAnim = requestAnimationFrame(step);
+  };
+  ageAnim = requestAnimationFrame(step);
+}
+function ageForBeat(i) { for (let j = i; j >= 0; j--) if (beats[j].age) return parseAge(beats[j].age); return 1e-43; }
+
+/* ======== 点亮宇宙 ======== */
+const spark = $("#spark");
+const bang = { active: false, t0: 0, x: 0, y: 0 };
+let shards = [];
+spark.addEventListener("click", () => {
+  if (banged) return;
+  spark.disabled = true;
+  $("#sparkLabel").textContent = "已点亮";
+  const r = spark.getBoundingClientRect();
+  bang.x = r.left + r.width / 2; bang.y = r.top + r.height / 2;
+  if (navigator.vibrate) navigator.vibrate(24);
+  const open = () => {
+    banged = true;
+    layoutTrack();
+    const p = idx.c1h + .45;
+    scrollTo(0, scrollForP(p));
+    pS = pT = p;
+    Object.assign(cur, structuredClone(SKY.hot)); target = SKY.hot;
+    setAge(1e-43, true);
+  };
+  if (reduceMotion) { open(); return; }
+  document.documentElement.classList.add("locked");
+  shards = Array.from({ length: 320 }, () => ({ a: Math.random() * 6.283, v: rnd(120, 1100), d: rnd(0, .25), l: rnd(1.4, 3.2), s: rnd(1, 2.6) }));
+  bang.t0 = performance.now(); bang.active = true;
+  setTimeout(() => { open(); bang.x = W / 2; bang.y = H / 2; }, 420);
+  setTimeout(() => document.documentElement.classList.remove("locked"), 2300);
+});
+function drawBang(t) {
+  const e = (t - bang.t0) / 1000, far = Math.hypot(W, H);
+  cx.globalCompositeOperation = "lighter";
+  for (const s of shards) {
+    const age = e - s.d; if (age < 0) continue;
+    const life = Math.max(0, 1 - age / s.l); if (life <= 0) continue;
+    const dist = s.v * (1 - Math.exp(-age * 1.7)) / 1.7;
+    const hue = Math.min(1, age / s.l * 1.4);
+    cx.fillStyle = `rgba(${hue < .4 ? "255,250,240" : hue < .75 ? "255,214,150" : "255,140,70"},${life})`;
+    cx.fillRect(bang.x + Math.cos(s.a) * dist, bang.y + Math.sin(s.a) * dist, s.s, s.s);
+  }
+  cx.globalCompositeOperation = "source-over";
+  if (e < .42) {
+    const p = e / .42, r = Math.max(1, far * p * p);
+    const g = cx.createRadialGradient(bang.x, bang.y, 0, bang.x, bang.y, r);
+    g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(.55, "rgba(255,246,228,.95)"); g.addColorStop(1, "rgba(255,230,190,0)");
+    cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+  } else {
+    const a = Math.max(0, 1 - (e - .42) / 1.9);
+    if (a > 0) { cx.fillStyle = `rgba(255,250,240,${a * a})`; cx.fillRect(0, 0, W, H); }
+  }
+  if (e > 4.5) bang.active = false;
+}
+
+/* ======== 跳回某一章（星尘里的“回去看看”） ======== */
+const veil = $("#veil");
+function jumpTo(id, u) {
+  veil.classList.add("on");
+  setTimeout(() => {
+    const p = idx[id] + u;
+    scrollTo(0, scrollForP(p));
+    pS = pT = p;
+    target = SKY[beats[idx[id]].skyEff]; Object.assign(cur, structuredClone(target));
+    setAge(ageForBeat(idx[id]), true);
+    setTimeout(() => veil.classList.remove("on"), 60);
+  }, 380);
+}
+
+/* ======== 主循环 ======== */
+const hint = $("#hint"), progress = $("#progress"), progI = $("i", progress), ruler = $("#ruler");
+let last = performance.now(), camZ = 0, lastCamZ = 0, speed = 0, activeI = -1;
+
+function updateBeats(p) {
+  for (const b of beats) {
+    const u = p - b.i;
+    if (u < -.02 || u > 1.02) { if (b.vis) { b.el.style.visibility = "hidden"; b.vis = false; b.el.classList.remove("on"); } continue; }
+    const fin = b.i === 0 ? 1 : smooth(.06, .26, u), fout = b.last ? 0 : smooth(.74, .94, u);
+    const a = fin * (1 - fout), s = .93 + .07 * fin + .09 * fout;
+    if (!b.vis) { b.el.style.visibility = "visible"; b.vis = true; }
+    b.el.style.opacity = a.toFixed(3);
+    b.el.style.transform = `${b.low ? "" : "translateY(-50%) "}scale(${s.toFixed(4)})`;
+    b.el.classList.toggle("on", a > .6);
+    if (a > .55 && !b.played) { b.played = true; b.el.classList.add("played"); onPlayed(b); }
+  }
+}
+function onPlayed(b) {
+  if (b.id === "c5e") {
+    $(".ruler .all").style.width = "100%";
+    $(".ruler .ours").style.width = `${ruler.dataset.ours}%`;
+  }
+}
+
+function frame(t) {
+  if (cv.clientWidth !== W || cv.clientHeight !== H) resize();
+  const realDt = Math.max(.001, (t - last) / 1000), dt = Math.min(.05, realDt); last = t;
+
+  pT = pAtVh(scrollY / unitH * 100);
+  pS += (pT - pS) * (1 - Math.exp(-dt * 5));
+  if (Math.abs(pT - pS) < 1e-4) pS = pT;
+  const p = pS;
+
+  camZ = zAtP(p) + (reduceMotion ? 0 : t * .014);   // 不滑的时候也在慢慢往前漂
+  speed = lerp(speed, (camZ - lastCamZ) / realDt, .25); lastCamZ = camZ;
+
+  // 当前所在的站：天空、时钟
+  const ai = Math.max(0, Math.min(N - 1, Math.floor(p + .08)));
+  if (ai !== activeI) {
+    activeI = ai;
+    const b = beats[ai];
+    target = SKY[b.skyEff];
+    if (b.modeEff === "age" && banged) { clockMode = "age"; clockL.textContent = "宇宙年龄"; setAge(ageForBeat(ai)); }
+  }
+  if (beats[ai].modeEff === "dist") {
+    if (clockMode !== "dist") { clockMode = "dist"; clockL.textContent = "离开地球"; cancelAnimationFrame(ageAnim); }
+    lyNow = lyAt(p);
+    vEl.textContent = lyNow < 10 ? lyNow.toFixed(2) : lyNow.toFixed(1); uEl.textContent = "光年";
+  }
+  const inStory = banged && p > idx.c1h - .3;
+  clock.classList.toggle("on", inStory);
+  progress.classList.toggle("on", inStory);
+  progI.style.transform = `scaleY(${clamp01((p - idx.c1h) / (N - 1 - idx.c1h)).toFixed(4)})`;
+  hint.style.opacity = (1 - smooth(.55, .72, p)).toFixed(3);
+
+  updateBeats(p);
+
+  // 天空插值
+  const k = 1 - Math.exp(-dt * (target.rate || 1.6));
+  for (let i = 0; i < 3; i++) { cur.bg[i] = lerp(cur.bg[i], target.bg[i], k); cur.col[i] = lerp(cur.col[i], target.col[i], k); }
+  for (let i = 0; i < 4; i++) cur.mote[i] = lerp(cur.mote[i], target.mote[i], k);
+  cur.stars = lerp(cur.stars, target.stars, k * .7);
+  cur.fog = lerp(cur.fog, target.fog, k);
+
+  cx.globalCompositeOperation = "source-over";
+  cx.fillStyle = `rgb(${cur.bg.map(Math.round).join(",")})`;
+  cx.fillRect(0, 0, W, H);
+
+  // 雾里飞不快，被撞得一顿一顿
+  const shake = reduceMotion || cur.fog < .5 ? 0 : cur.fog * 3.5;
+  const ox = W / 2 + (Math.sin(t / 47) + Math.sin(t / 31)) * shake;
+  const oy = H / 2 + (Math.cos(t / 53) + Math.sin(t / 37)) * shake;
+
+  if (cur.fog > .005) {
+    cx.globalCompositeOperation = "lighter";
+    const col = cur.col.map(Math.round).join(","), big = Math.max(W, H);
+    for (const b of blobs) {
+      b.x += b.vx * dt; b.y += b.vy * dt;
+      if (b.x < -.2 || b.x > 1.2) b.vx *= -1;
+      if (b.y < -.2 || b.y > 1.2) b.vy *= -1;
+      const bx = b.x * W + ox - W / 2, by = b.y * H + oy - H / 2, br = b.r * big;
+      const g = cx.createRadialGradient(bx, by, 0, bx, by, br);
+      g.addColorStop(0, `rgba(${col},${.075 * cur.fog})`); g.addColorStop(1, `rgba(${col},0)`);
+      cx.fillStyle = g; cx.fillRect(0, 0, W, H);
+    }
+  }
+
+  // 近处的微尘：没有星星的时候，靠它们感觉到在飞
+  cx.globalCompositeOperation = "lighter";
+  const ma = cur.mote[3];
+  if (ma > .005) {
+    const mc = cur.mote.slice(0, 3).map(Math.round).join(",");
+    for (const m of motes) {
+      const dz = recycle(m, camZ, M_DEPTH, M_SPREAD);
+      const jx = cur.fog > .3 ? Math.sin(t / 90 + m.j) * 6 * cur.fog : 0;
+      const sx = ox + (m.x + jx) * F / dz, sy = oy + m.y * F / dz;
+      if (sx < -20 || sx > W + 20 || sy < -20 || sy > H + 20) continue;
+      const fade = clamp01((M_DEPTH - dz) / (M_DEPTH * .4)) * clamp01(dz / 120);
+      const r = Math.min(2.6, 140 / dz);
+      cx.fillStyle = `rgba(${mc},${ma * fade})`;
+      cx.fillRect(sx, sy, r, r);
+    }
+  }
+
+  // 星星：飞得快时拉成光线；新亮起的星会闪一下
+  const warp = !reduceMotion && Math.abs(speed) > 80;
+  for (const s of stars) {
+    const dz = recycle(s, camZ, DEPTH, SPREAD);
+    const vis = s.th < cur.stars;
+    if (!vis) { s.on = false; continue; }
+    if (!s.on) { s.on = true; s.flare = target === SKY.firstStars ? 1 : 0; }
+    s.flare = Math.max(0, s.flare - dt * .8);
+    const sx = ox + s.x * F / dz, sy = oy + s.y * F / dz;
+    if (sx < -60 || sx > W + 60 || sy < -60 || sy > H + 60) continue;
+    const fade = clamp01((DEPTH - dz) / (DEPTH * .25)) * Math.min(1, (cur.stars - s.th) * 10);
+    const a = (.5 + .5 * (.5 + .5 * Math.sin(t / 1000 * s.sp + s.tw))) * fade;
+    const r = Math.min(3.4, Math.max(.55, s.r * 1300 / dz));
+    if (warp) {
+      const z2 = dz + Math.max(-400, Math.min(400, speed * .045));
+      if (z2 > 1) {
+        cx.strokeStyle = `rgba(${s.c},${a * .9})`; cx.lineWidth = r;
+        cx.beginPath(); cx.moveTo(ox + s.x * F / z2, oy + s.y * F / z2); cx.lineTo(sx, sy); cx.stroke();
+      }
+    } else {
+      cx.fillStyle = `rgba(${s.c},${a})`;
+      if (r < 1.4) cx.fillRect(sx - r * .7, sy - r * .7, r * 1.4, r * 1.4);   // 小星星画方块，比画圆便宜得多
+      else { cx.beginPath(); cx.arc(sx, sy, r * .8, 0, 6.283); cx.fill(); }
+    }
+    if (r > 2.2 || s.flare > 0) {
+      cx.fillStyle = `rgba(${s.c},${a * .1 + s.flare * .3})`;
+      cx.beginPath(); cx.arc(sx, sy, r * 2.6 + s.flare * 10, 0, 6.283); cx.fill();
+    }
+  }
+  cx.globalCompositeOperation = "source-over";
+
+  // 各章的画面
+  flash = 0;
+  sceneCMB();
+  sceneStar(t);
+  sceneNeutron(t, dt);
+  sceneSolar(t, dt);
+  sceneMoon(t, dt);
+  sceneOcean(t, dt);
+  sceneLight(t);
+  sceneDust(t);
+  if (flash > .003) { cx.fillStyle = `rgba(255,250,240,${Math.min(.95, flash)})`; cx.fillRect(0, 0, W, H); }
+
+  if (bang.active) drawBang(t);
+  requestAnimationFrame(frame);
+}
+
+resize();
+scrollTo(0, 0);
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
