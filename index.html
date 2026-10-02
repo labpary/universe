@@ -207,7 +207,7 @@
   .beat .cal-hint { margin: 14px 0 0; font-size: 12px; color: var(--faint); letter-spacing: .3em; }
 
   /* 身体里的星尘 */
-  .els { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 0 14px; }
+  .els { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0; }
   .els button {
     min-height: 44px; padding: 4px 2px; border-radius: 22px;
     border: 1px solid var(--line); color: var(--soft); font-size: 14px; line-height: 1.3;
@@ -215,7 +215,7 @@
   }
   .els button small { display: block; font-family: var(--en); font-size: 13px; color: var(--faint); }
   .els button.sel { border-color: var(--c); color: var(--ink); box-shadow: 0 0 16px -4px var(--c); }
-  .beat .el-cap { min-height: 3.6em; margin: 0; font-size: 15px; text-align: center; }
+  .beat .el-cap { margin: 0 0 16px; font-size: 16px; line-height: 1.9; text-align: center; }
   .el-cap button { margin-left: 8px; color: var(--gold); font-size: 13px; letter-spacing: .1em; border-bottom: 1px solid var(--gold-dim); }
 
   /* 歌者的诗 */
@@ -518,8 +518,8 @@
     <p>你身上大约有几千亿亿亿个原子。按重量算：</p>
   </section>
   <section class="beat low" data-id="c9b" data-len="240" data-travel="0" data-interactive>
-    <div class="els" id="els"></div>
     <p class="el-cap" id="elCap">点一下，看它从哪里来</p>
+    <div class="els" id="els"></div>
   </section>
   <section class="beat low" data-id="c9c" data-len="130" data-travel="40">
     <p class="key">你是由 138 亿岁的氢、恒星炼出的碳和氧、超新星撒出的铁组成的。</p>
@@ -1282,14 +1282,15 @@ function sceneLight(t) {
 
 // —— 尾声：星尘聚成一个人 ——
 const EL = [
-  { n: "氧", w: "约 65%", c: "143,199,255", m: .65, ch: "第二章 · 恒星熔炉", go: "c2c" },
-  { n: "碳", w: "约 18%", c: "242,194,123", m: .18, ch: "第二章 · 恒星熔炉", go: "c2c" },
-  { n: "氢", w: "约 10%", c: "255,255,255", m: .10, ch: "第一章 · 宇宙最初的几分钟", go: "c1d" },
-  { n: "氮", w: "约 3%", c: "184,162,255", m: .03, ch: "第二章 · 恒星熔炉", go: "c2c" },
-  { n: "钙", w: "约 1.5%", c: "245,231,198", m: .015, ch: "第三章 · 超新星。在你的骨骼和牙齿里", go: "c3a" },
-  { n: "磷", w: "约 1%", c: "143,227,168", m: .01, ch: "第三章 · 超新星。在你的 DNA 里", go: "c3a" },
-  { n: "铁", w: "约 3 克", c: "255,122,77", m: 0, ch: "第三章 · 超新星。在你的血液里", go: "c3a" }
+  { n: "氧", w: "约 65%", c: "143,199,255", m: .65, ch: "可能来自某一次恒星的爆发", go: "c2c" },
+  { n: "碳", w: "约 18%", c: "242,194,123", m: .18, ch: "可能是某一颗恒星的遗骸", go: "c2c" },
+  { n: "氢", w: "约 10%", c: "255,255,255", m: .10, ch: "来自宇宙最初的几分钟，比所有恒星都老", go: "c1d" },
+  { n: "氮", w: "约 3%", c: "184,162,255", m: .03, ch: "可能是某一颗恒星的遗骸", go: "c2c" },
+  { n: "钙", w: "约 1.5%", c: "245,231,198", m: .015, ch: "可能来自某一次恒星的爆发<br>在你的骨骼和牙齿里", go: "c3a" },
+  { n: "磷", w: "约 1%", c: "143,227,168", m: .01, ch: "可能来自某一次恒星的爆发<br>在你的 DNA 里", go: "c3a" },
+  { n: "铁", w: "约 3 克", c: "255,122,77", m: 0, ch: "可能来自某一次恒星的爆发<br>在你的血液里", go: "c3a" }
 ];
+
 const figure = (function () {
   const c = document.createElement("canvas"); c.width = 200; c.height = 320;
   const g = c.getContext("2d");
@@ -1349,7 +1350,7 @@ elsBox.addEventListener("click", ev => {
   $$("button", elsBox).forEach(x => x.classList.toggle("sel", +x.dataset.i === selEl));
   if (selEl < 0) { elCap.textContent = "点一下，看它从哪里来"; return; }
   const e = EL[selEl];
-  elCap.innerHTML = `${e.n}，来自${e.ch}<button type="button" id="goBack">回去看看</button>`;
+  elCap.innerHTML = `${e.n}，${e.ch}<button type="button" id="goBack">回去看看</button>`;
   $("#goBack").addEventListener("click", () => jumpTo(e.go, .5));
 });
 
