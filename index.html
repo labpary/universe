@@ -134,6 +134,7 @@
   .ch-head { text-align: center; }
   .beat .ch-no { margin: 0 0 10px; font-size: 12px; letter-spacing: .6em; text-indent: .6em; color: var(--gold-dim); }
   .ch-head h2 { margin: 0; font-size: clamp(28px, 7.6vw, 40px); font-weight: 600; letter-spacing: .16em; text-indent: .16em; line-height: 1.5; }
+  .ch-head h2 small { display: block; margin-top: 2px; font-size: .46em; font-weight: 400; letter-spacing: .32em; text-indent: .32em; color: var(--soft); }
   .beat .ch-time { margin: 12px 0 0; font-family: var(--en); font-style: italic; font-size: 18px; color: var(--soft); letter-spacing: .06em; }
   .ch-time .cn { font-family: var(--cn); font-style: normal; font-size: 14px; letter-spacing: .12em; }
 
@@ -156,6 +157,7 @@
   .clock b { display: block; font-weight: 400; line-height: 1.3; white-space: nowrap; }
   .clock .v { font-family: var(--en); font-weight: 300; font-size: 25px; letter-spacing: .03em; color: var(--gold); }
   .clock .v sup { font-size: .58em; line-height: 0; vertical-align: .9em; margin-left: 2px; }
+  .clock .v .none { font-family: var(--cn); font-size: 15px; letter-spacing: .3em; color: var(--soft); }
   .clock .u { font-size: 13px; letter-spacing: .15em; margin-left: .35em; color: var(--soft); }
 
   .progress { position: fixed; z-index: 4; right: 10px; top: 38vh; width: 1px; height: 24vh; background: var(--line); opacity: 0; transition: opacity .8s; pointer-events: none; }
@@ -294,6 +296,13 @@
     <span class="spark-label" id="sparkLabel">轻触</span>
   </section>
 
+  <!-- ============ 时间开始之前 ============ -->
+  <section class="beat center" data-id="c1z" data-sky="hot" data-mode="none" data-len="160" data-travel="0">
+    <p>这个时候，时间还没有开始。</p>
+    <p>人类的语言没有描述时间开始的词语，说“在这之后时间开始”是不对的。</p>
+    <p class="key">这之后的一刹那，<br>可以小于亿万分之一秒，<br>也可以长于亿万年。</p>
+  </section>
+
   <!-- ============ 第一章 ============ -->
   <section class="beat ch-head" data-id="c1h" data-sky="hot" data-age="1e-43" data-len="100" data-travel="90">
     <p class="ch-no">第一章</p>
@@ -306,10 +315,6 @@
   </section>
   <section class="beat" data-id="c1b" data-age="1e-36" data-len="120" data-travel="80">
     <p>在第一秒还远远没过完的时候，物理学家猜想，自然界的四种基本力（引力、电磁力、强核力、弱核力）可能是同一种力。宇宙冷下来以后，它们才一个一个分开。</p>
-  </section>
-  <section class="beat" data-id="c1c" data-len="130" data-travel="80">
-    <p>还有一种理论叫超弦理论。它的数学要求宇宙有 <span class="num">10</span> 个维度：除了我们感受得到的 <span class="num">3</span> 个空间维度和 <span class="num">1</span> 个时间维度，剩下 <span class="num">6</span> 个蜷缩得太小，看不见。</p>
-    <p class="note">这两件事都还没被证实。但大刘的十维田园，不是凭空想出来的。</p>
   </section>
   <section class="beat" data-id="c1d" data-sky="warm" data-age="180" data-len="120" data-travel="80">
     <h3 class="sub">头几分钟</h3>
@@ -338,7 +343,7 @@
   <!-- ============ 第二章 ============ -->
   <section class="beat ch-head" data-id="c2h" data-sky="dark" data-age="1e8y" data-len="100" data-travel="400">
     <p class="ch-no">第二章</p>
-    <h2>第一批恒星</h2>
+    <h2>恒星<small>夜晚的点点星光</small></h2>
     <p class="ch-time"><span class="cn">宇宙约</span> 2 <span class="cn">亿岁</span></p>
   </section>
   <section class="beat" data-id="c2a" data-len="120" data-travel="400">
@@ -485,19 +490,20 @@
   </section>
 
   <!-- ============ 第八章 ============ -->
-  <section class="beat ch-head" data-id="c8h" data-sky="light" data-mode="dist" data-len="100" data-travel="300">
+  <section class="beat ch-head" data-id="c8h" data-sky="light" data-mode="dist" data-len="100" data-travel="600">
     <p class="ch-no">第八章</p>
     <h2>光在路上</h2>
     <p class="ch-time"><span class="cn">此刻</span></p>
   </section>
-  <section class="beat low" data-id="c8a" data-len="160" data-travel="300">
+  <section class="beat low" data-id="c8a" data-len="160" data-travel="900">
     <p>你抬头看到的星光，是很多年前出发的。反过来也一样：地球反射的阳光，也一直在往宇宙深处走。它早已暗到没有任何望远镜能看见，但它一直在走，每年走 1 光年。</p>
   </section>
-  <section class="beat low" data-id="c8b" data-len="170" data-travel="700">
+  <section class="beat low" data-id="c8b" data-len="170" data-travel="1600">
     <p>我们认识那天的光，已经走了 <span data-live="metLy">4.99</span> 光年。</p>
     <p class="key" data-live="metPass">今年春天，它越过了离太阳最近的恒星，比邻星。下一站是巴纳德星，2027 年底到。</p>
   </section>
-  <section class="beat low" data-id="c8c" data-len="180" data-travel="1000">
+  <section class="beat low" data-id="c8s" data-len="640" data-travel="5200"></section>
+  <section class="beat low" data-id="c8c" data-len="180" data-travel="600">
     <p>你出生那天的光，现在走到了 <span data-live="birthLy">27</span> 光年外。</p>
     <p class="key" data-live="birthPass">它在 2016 年秋天路过了牛郎星，2024 年底路过了织女星。</p>
   </section>
@@ -552,6 +558,19 @@ const UNIVERSE_YR = 13.787e9;    // Planck 2018
 const STARS_LY = [               // 距离（光年），Hipparcos / Gaia
   ["比邻星", 4.2465, "255,150,120"], ["南门二", 4.344, "255,236,200"], ["巴纳德星", 5.963, "255,140,110"],
   ["天狼星", 8.60, "215,230,255"], ["牛郎星", 16.73, "255,248,232"], ["织女星", 25.04, "205,222,255"]
+];
+// 第八章一路掠过的 10 颗星：名字、距离（光年）、颜色、一句话、在画面里的方位
+const PASS = [
+  ["比邻星", 4.2465, "255,150,120", "离太阳最近的恒星", -1, -.5],
+  ["巴纳德星", 5.963, "255,140,110", "在天上移动\n得最快的恒星", 1, .4],
+  ["沃尔夫 359", 7.86, "255,130,100", "一颗很暗的红矮星", -1, .1],
+  ["天狼星", 8.60, "215,230,255", "夜空中最亮的恒星", 1, -.6],
+  ["天苑四", 10.47, "255,205,150", "比太阳年轻\n得多的一颗恒星", -1, -.6],
+  ["天鹅座 61", 11.40, "255,185,135", "人类第一颗测出\n距离的恒星（1838 年）", 1, .5],
+  ["天仓五", 11.91, "255,236,200", "和太阳很像\n的一颗恒星", -1, .55],
+  ["牛郎星", 16.73, "255,248,232", "自转很快，\n被甩成了扁球", 1, -.4],
+  ["格利泽 581", 20.55, "255,150,120", "人们在它周围\n找到过好几颗行星", -1, .35],
+  ["织女星", 25.04, "205,222,255", "大约 1.2 万年后，\n它会成为北极星", 1, -.2]
 ];
 const FONT = '"Noto Serif SC", "Songti SC", "STSong", serif';
 
@@ -656,43 +675,99 @@ layoutTrack();
 
 /* ======== 天空 ======== */
 const SKY = {
-  now:        { bg: [5, 7, 15],   stars: 1,   fog: 0,   col: [255, 236, 200], mote: [200, 210, 255, 0] },
+  // stars 星星；fog 雾；mote 近处微尘；chaos 躁动的粒子；sparkle 闪烁；milky 银河；bodies 路过的天体
+  now:        { bg: [5, 7, 15],   stars: 1,   fog: 0,   col: [255, 236, 200], mote: [200, 210, 255, 0],   milky: .55, sparkle: .25 },
   void:       { bg: [0, 0, 0],    stars: 0,   fog: 0,   col: [255, 236, 200], mote: [200, 210, 255, 0] },
-  hot:        { bg: [30, 19, 13], stars: 0,   fog: 1,   col: [255, 226, 188], mote: [255, 240, 215, .75] },
-  warm:       { bg: [30, 14, 7],  stars: 0,   fog: .9,  col: [255, 160, 80],  mote: [255, 205, 150, .65] },
-  ember:      { bg: [22, 7, 4],   stars: 0,   fog: .85, col: [220, 80, 36],   mote: [255, 160, 110, .55] },
+  hot:        { bg: [30, 19, 13], stars: 0,   fog: 1,   col: [255, 226, 188], mote: [255, 240, 215, .75], chaos: 1 },
+  warm:       { bg: [30, 14, 7],  stars: 0,   fog: .9,  col: [255, 160, 80],  mote: [255, 205, 150, .65], chaos: .8 },
+  ember:      { bg: [22, 7, 4],   stars: 0,   fog: .85, col: [220, 80, 36],   mote: [255, 160, 110, .55], chaos: .55 },
   clear:      { bg: [3, 4, 9],    stars: 0,   fog: 0,   col: [220, 80, 36],   mote: [150, 160, 190, .14], rate: 4 },
   dark:       { bg: [1, 1, 3],    stars: 0,   fog: 0,   col: [120, 140, 200], mote: [130, 140, 170, .12] },
-  firstStars: { bg: [3, 5, 13],   stars: .38, fog: 0,   col: [120, 160, 255], mote: [150, 170, 220, .1] },
-  nebula:     { bg: [14, 5, 20],  stars: .75, fog: .35, col: [205, 80, 175],  mote: [255, 170, 130, .14] },
-  gold:       { bg: [16, 10, 16], stars: .75, fog: .3,  col: [232, 182, 92],  mote: [255, 214, 130, .14] },
-  cloud:      { bg: [12, 8, 10],  stars: .7,  fog: .22, col: [170, 110, 90],  mote: [210, 170, 140, .12] },
-  sun:        { bg: [16, 10, 6],  stars: .7,  fog: .16, col: [255, 190, 110], mote: [255, 210, 160, .1] },
-  moon:       { bg: [6, 8, 15],   stars: .8,  fog: .04, col: [200, 210, 232], mote: [200, 210, 232, .08] },
-  life:       { bg: [3, 14, 20],  stars: .2,  fog: .2,  col: [60, 170, 180],  mote: [170, 230, 240, .16] },
-  calendar:   { bg: [7, 8, 13],   stars: .6,  fog: 0,   col: [200, 200, 220], mote: [200, 200, 220, .06] },
-  light:      { bg: [4, 6, 18],   stars: 1,   fog: 0,   col: [200, 210, 255], mote: [200, 210, 255, .06] },
-  dust:       { bg: [11, 7, 22],  stars: 1,   fog: .14, col: [170, 120, 225], mote: [210, 190, 255, .08] }
+  firstStars: { bg: [3, 5, 13],   stars: .9,  fog: 0,   col: [120, 160, 255], mote: [150, 170, 220, .1],  sparkle: 1 },
+  nebula:     { bg: [14, 5, 20],  stars: 1,   fog: .35, col: [205, 80, 175],  mote: [255, 170, 130, .14], sparkle: .35 },
+  gold:       { bg: [16, 10, 16], stars: 1,   fog: .3,  col: [232, 182, 92],  mote: [255, 214, 130, .14], sparkle: .35 },
+  cloud:      { bg: [12, 8, 10],  stars: .9,  fog: .22, col: [170, 110, 90],  mote: [210, 170, 140, .12], sparkle: .2 },
+  sun:        { bg: [16, 10, 6],  stars: .9,  fog: .16, col: [255, 190, 110], mote: [255, 210, 160, .1],  sparkle: .2 },
+  moon:       { bg: [6, 8, 15],   stars: 1,   fog: .04, col: [200, 210, 232], mote: [200, 210, 232, .08], sparkle: .3, milky: .3 },
+  life:       { bg: [3, 14, 20],  stars: .25, fog: .2,  col: [60, 170, 180],  mote: [170, 230, 240, .16] },
+  calendar:   { bg: [7, 8, 13],   stars: 1,   fog: 0,   col: [200, 200, 220], mote: [200, 200, 220, .06], sparkle: .3, milky: .4 },
+  light:      { bg: [4, 6, 18],   stars: 1,   fog: 0,   col: [200, 210, 255], mote: [200, 210, 255, .06], sparkle: .5, milky: 1, bodies: 1 },
+  dust:       { bg: [11, 7, 22],  stars: 1,   fog: .14, col: [170, 120, 225], mote: [210, 190, 255, .08], sparkle: .4, milky: .6 }
 };
+const SKY_KEYS = ["stars", "fog", "chaos", "sparkle", "milky", "bodies"];
 const cv = $("#sky"), cx = cv.getContext("2d");
 let W = 0, H = 0, DPR = 1, F = 600;
 const cur = structuredClone(SKY.now);
 let target = SKY.now;
 
 const SPREAD = 2400, DEPTH = 4000, M_SPREAD = 700, M_DEPTH = 1600;
-let stars = [], motes = [], blobs = [];
+const B_SPREAD = 1500, B_DEPTH = 3600;
+const STAR_RGB = ["255,214,170", "200,215,255", "255,250,240"];
+let stars = [], motes = [], blobs = [], bodies = [];
+let farTex = null, farSide = 0, milkyTex = null;
+const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(6.283 * Math.random());
+// 远处数不清的小星星：画一次，之后每帧整张贴上去
+function buildFar() {
+  farSide = Math.max(W, H);
+  const px = Math.ceil(farSide * DPR), c = document.createElement("canvas");
+  c.width = c.height = px;
+  const g = c.getContext("2d"), n = Math.round(px * px / 1100);
+  for (let i = 0; i < n; i++) {
+    const r = (Math.random() < .93 ? rnd(.3, .75) : rnd(.8, 1.4)) * DPR, w = Math.random();
+    g.fillStyle = `rgba(${STAR_RGB[w < .12 ? 0 : w < .3 ? 1 : 2]},${rnd(.18, .8).toFixed(2)})`;
+    g.beginPath(); g.arc(Math.random() * px, Math.random() * px, r, 0, 6.283); g.fill();
+  }
+  farTex = c;
+}
+// 银河：一条斜着的光带，中间有暗的尘埃带
+function buildMilky() {
+  const w = 1400, c = document.createElement("canvas"); c.width = c.height = w;
+  const g = c.getContext("2d");
+  g.translate(w / 2, w / 2); g.rotate(-.55);
+  for (let i = 0; i < 70; i++) {
+    const x = rnd(-w * .75, w * .75), y = gauss() * 45, r = rnd(70, 200);
+    const col = Math.random() < .55 ? "185,180,235" : "235,205,170";
+    const gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, `rgba(${col},.07)`); gr.addColorStop(1, `rgba(${col},0)`);
+    g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  for (let i = 0; i < 14000; i++) {
+    const s = Math.random() < .96 ? .9 : 1.7;
+    g.fillStyle = `rgba(255,250,240,${rnd(.12, .7).toFixed(2)})`;
+    g.fillRect(rnd(-w * .78, w * .78), gauss() * 60, s, s);
+  }
+  g.globalCompositeOperation = "destination-out";
+  for (let i = 0; i < 26; i++) {
+    const x = rnd(-w * .7, w * .7), y = gauss() * 10, r = rnd(30, 80);
+    const gr = g.createRadialGradient(x, y, 0, x, y, r);
+    gr.addColorStop(0, "rgba(0,0,0,.35)"); gr.addColorStop(1, "rgba(0,0,0,0)");
+    g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  milkyTex = c;
+}
+function placeBody(b, camZ, anywhere) {
+  // 不从正中间穿过去，免得挡住画面中央
+  const a = Math.random() * 6.283, d = rnd(320, B_SPREAD);
+  b.x = Math.cos(a) * d; b.y = Math.sin(a) * d;
+  b.z = camZ + (anywhere ? Math.random() : rnd(.85, 1)) * B_DEPTH;
+}
 function makeField(camZ) {
-  const n = Math.max(420, Math.min(950, Math.round(W * H / 800)));
+  const n = Math.max(600, Math.min(1400, Math.round(W * H / 450)));
   stars = Array.from({ length: n }, () => {
     const w = Math.random();
     return {
       x: rnd(-SPREAD, SPREAD), y: rnd(-SPREAD, SPREAD), z: camZ + Math.random() * DEPTH,
       r: Math.pow(Math.random(), 3) * 1.4 + .45, th: Math.random(), tw: Math.random() * 6.28, sp: rnd(.4, 1.6),
-      c: w < .15 ? "255,214,170" : w < .35 ? "200,215,255" : "255,250,240", on: false, flare: 0
+      c: STAR_RGB[w < .15 ? 0 : w < .35 ? 1 : 2], on: false, flare: 0
     };
   });
   motes = Array.from({ length: 170 }, () => ({ x: rnd(-M_SPREAD, M_SPREAD), y: rnd(-M_SPREAD, M_SPREAD), z: camZ + Math.random() * M_DEPTH, j: Math.random() * 6.28 }));
   blobs = Array.from({ length: 7 }, () => ({ x: Math.random(), y: Math.random(), r: rnd(.35, .7), vx: rnd(-.03, .03), vy: rnd(-.015, .015) }));
+  const BODY_RGB = ["255,150,110", "255,225,180", "190,210,255", "255,250,240", "255,190,120", "170,190,255", "255,170,140"];
+  bodies = Array.from({ length: 90 }, () => {
+    const b = { R: Math.pow(Math.random(), 2) * 12 + 2, c: BODY_RGB[Math.random() * BODY_RGB.length | 0], tw: Math.random() * 6.28 };
+    placeBody(b, camZ, true); return b;
+  });
 }
 // 物体飞出视野后挪到另一头；跳得太远就直接重新撒
 function recycle(o, camZ, depth, spread) {
@@ -709,7 +784,8 @@ function resize() {
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
   cx.setTransform(DPR, 0, 0, DPR, 0, 0);
   F = Math.max(W, H) * .9;
-  if (!stars.length) makeField(0);
+  if (!stars.length) { makeField(0); buildMilky(); }
+  if (!farTex || Math.max(W, H) > farSide * 1.15) buildFar();
   // 只在宽度变化时重算滚动单位，手机地址栏伸缩不影响航程
   if (innerWidth !== unitW) { unitW = innerWidth; unitH = innerHeight; layoutTrack(); }
 }
@@ -748,6 +824,86 @@ const cmbTex = (function () {
 })();
 
 /* ======== 场景 ======== */
+// —— 上古时代：不稳定的物质，忽生忽灭，正反粒子成对出现又湮灭 ——
+const CHAOS_RGB = ["255,250,235", "255,214,150", "255,160,95", "185,210,255"];
+const newBit = (b = {}) => Object.assign(b, { x: Math.random(), y: Math.random(), vx: 0, vy: 0, max: rnd(.3, 1.5), s: rnd(.7, 2.2), c: CHAOS_RGB[Math.random() * 4 | 0], ph: Math.random() * 9 });
+const bits = Array.from({ length: 680 }, () => { const b = newBit(); b.life = Math.random() * b.max; return b; });
+const pairs = Array.from({ length: 28 }, () => ({ x: Math.random(), y: Math.random(), a: Math.random() * 6.283, t: Math.random() * 1.25, dur: rnd(.5, 1.1) }));
+function sceneChaos(sdt, simT) {
+  const I = cur.chaos || 0; if (I < .01) return;
+  cx.globalCompositeOperation = "lighter";
+  const kick = 1400 * I, damp = Math.exp(-sdt * 5);
+  for (const b of bits) {
+    b.life -= sdt;
+    if (b.life <= 0) { newBit(b); b.life = b.max; }
+    b.vx = (b.vx + rnd(-1, 1) * kick * sdt) * damp; b.vy = (b.vy + rnd(-1, 1) * kick * sdt) * damp;
+    b.x += b.vx * sdt / W; b.y += b.vy * sdt / H;
+    const a = Math.sin(Math.PI * b.life / b.max) * (.5 + .5 * Math.sin(simT * 38 + b.ph)) * I;
+    if (a <= .02) continue;
+    cx.fillStyle = `rgba(${b.c},${a.toFixed(3)})`;
+    cx.fillRect(b.x * W - b.s / 2, b.y * H - b.s / 2, b.s, b.s);
+  }
+  for (const q of pairs) {
+    q.t += sdt / q.dur;
+    if (q.t >= 1.25) Object.assign(q, { t: 0, x: Math.random(), y: Math.random(), a: Math.random() * 6.283, dur: rnd(.5, 1.1) });
+    const px = q.x * W, py = q.y * H;
+    if (q.t < 1) {
+      const sep = Math.sin(q.t * Math.PI) * 15, dx = Math.cos(q.a) * sep, dy = Math.sin(q.a) * sep;
+      disc(px + dx, py + dy, 1.3, `rgba(255,236,200,${.85 * I})`);
+      disc(px - dx, py - dy, 1.3, `rgba(170,210,255,${.85 * I})`);
+    } else {
+      const f = (q.t - 1) / .25;
+      glow(px, py, 5 + f * 16, "255,245,225", (1 - f) * .75 * I);
+    }
+  }
+  cx.globalCompositeOperation = "source-over";
+}
+
+// —— 星星点点：随机闪起的四角星芒 ——
+let glints = [], glintAcc = 0;
+function sceneSparkle(dt, t) {
+  glintAcc += dt * (cur.sparkle || 0) * 18;
+  while (glintAcc > 1) {
+    glintAcc--;
+    glints.push({ x: Math.random() * W, y: rnd(.05, .68) * H, t0: t, life: rnd(600, 1500), s: rnd(3, 10), c: STAR_RGB[Math.random() * 3 | 0] });
+  }
+  if (!glints.length) return;
+  cx.globalCompositeOperation = "lighter";
+  cx.lineWidth = .8;
+  glints = glints.filter(g => {
+    const p = (t - g.t0) / g.life; if (p >= 1) return false;
+    const a = Math.sin(p * Math.PI), L = g.s * (.5 + a);
+    glow(g.x, g.y, L, g.c, a * .22);
+    cx.strokeStyle = `rgba(${g.c},${(a * .85).toFixed(3)})`;
+    cx.beginPath(); cx.moveTo(g.x - L, g.y); cx.lineTo(g.x + L, g.y); cx.moveTo(g.x, g.y - L); cx.lineTo(g.x, g.y + L); cx.stroke();
+    disc(g.x, g.y, 1.1, `rgba(${g.c},${a.toFixed(3)})`);
+    return true;
+  });
+  cx.globalCompositeOperation = "source-over";
+}
+
+// —— 第八章：星海，一路上的天体从身边掠过 ——
+function sceneBodies(t, ox, oy) {
+  const A = cur.bodies || 0; if (A < .01) return;
+  cx.globalCompositeOperation = "lighter";
+  for (const b of bodies) {
+    let dz = b.z - camZ;
+    if (dz < 20 || dz > B_DEPTH * 2) { placeBody(b, camZ, dz > B_DEPTH * 2 || dz < -B_DEPTH); dz = b.z - camZ; }
+    else if (dz > B_DEPTH + 20) { b.z -= B_DEPTH; dz = b.z - camZ; }
+    const sx = ox + b.x * F / dz, sy = oy + b.y * F / dz;
+    const r = b.R * F / dz;
+    if (sx < -r * 6 || sx > W + r * 6 || sy < -r * 6 || sy > H + r * 6) continue;
+    const a = A * clamp01((B_DEPTH - dz) / (B_DEPTH * .3)) * (.8 + .2 * Math.sin(t / 700 + b.tw));
+    glow(sx, sy, r * 5 + 4, b.c, .3 * a);
+    disc(sx, sy, Math.max(.8, r), `rgba(${b.c},${a.toFixed(3)})`);
+    if (r > 2) {
+      const L = r * 7;
+      cx.strokeStyle = `rgba(${b.c},${(.3 * a).toFixed(3)})`; cx.lineWidth = .8;
+      cx.beginPath(); cx.moveTo(sx - L, sy); cx.lineTo(sx + L, sy); cx.moveTo(sx, sy - L); cx.lineTo(sx, sy + L); cx.stroke();
+    }
+  }
+  cx.globalCompositeOperation = "source-over";
+}
 let flash = 0;                         // 本帧需要的白闪
 const S = () => Math.min(W, H * .75);
 const focusY = () => H * .32;          // 有画面时，物体在上，文字在下
@@ -1059,35 +1215,57 @@ function sceneOcean(t, dt) {
 
 // —— 第八章：从地球出发往外飞，路过一颗颗有名字的星 ——
 let lyNow = 0;
+// 星海里的 9 颗星轮流登场：每颗分到一样长的一段路，擦身而过时（SEA_HIT 处）读数正好是它的真实距离
+const SEA = PASS.slice(1), SEA_U0 = .03, SEA_U1 = .97, SEA_W = (SEA_U1 - SEA_U0) / SEA.length, SEA_HIT = .8;
+const SEA_KEYS = [[SEA_U0, MET_Y], ...SEA.map((st, j) => [SEA_U0 + (j + SEA_HIT) * SEA_W, st[1]]), [SEA_U1, AGE_Y]];
 function lyAt(p) {
-  const a = idx.c8a, b = idx.c8b, c = idx.c8c;
+  const a = idx.c8a, b = idx.c8b, sea = idx.c8s;
   if (p < a) return 0;
   if (p < b) return .3 * smooth(a + .2, a + .9, p);
-  if (p < c) return lerp(.3, MET_Y, smooth(b + .1, b + .6, p));
-  return lerp(MET_Y, AGE_Y, smooth(c + .1, c + .62, p));
+  if (p < sea) return lerp(.3, MET_Y, smooth(b + .1, b + .6, p));
+  const u = p - sea;
+  if (u <= SEA_KEYS[0][0]) return MET_Y;
+  for (let i = 1; i < SEA_KEYS.length; i++) if (u <= SEA_KEYS[i][0]) {
+    const [u0, l0] = SEA_KEYS[i - 1], [u1, l1] = SEA_KEYS[i];
+    return l0 * Math.pow(l1 / l0, (u - u0) / (u1 - u0));
+  }
+  return AGE_Y;
 }
 function sceneLight(t) {
-  const k = q("c8h"); if (k < -.4 || k > 4.5) return;
+  const k = q("c8h"); if (k < -.4 || k > 5.5) return;
   const A = smooth(-.4, .2, k);
   const s = S(), x = W / 2, y = focusY(), ly = lyNow;
   // 身后的地球越来越小
   const er = s * .09 / (1 + ly * 25), ea = A * (1 - smooth(1.2, 2.2, k));
   if (ea > 0) { glow(x, y, er * 3 + 4, "120,170,255", .4 * ea); disc(x, y, Math.max(1.2, er), `rgba(80,140,230,${ea})`); }
-  // 有名字的星，从身边掠过
-  STARS_LY.forEach(([name, d, rgb], i) => {
-    if (name === "南门二") return;
-    const dz = Math.log(d) - Math.log(Math.max(ly, .08));
-    if (dz < -.12 || dz > .9) return;
-    const near = 1 / (dz + .18), side = i % 2 ? 1 : -1;
-    const px = x + side * s * .09 * near, py = y + (i % 3 - 1) * s * .03 * near;
-    const a = A * (1 - smooth(.55, .9, dz)) * (dz < 0 ? 1 + dz / .12 : 1);
+  // 有名字的星，一颗接一颗迎面飞来，从身边掠过
+  PASS.forEach(([name, d, rgb, note, side, vy], i) => {
+    let dz;
+    if (i === 0) dz = Math.log(d) - Math.log(Math.max(ly, .08));          // 比邻星：按真实距离
+    else {
+      const v = (pS - idx.c8s - SEA_U0 - (i - 1) * SEA_W) / SEA_W;          // 其余：在自己那一段里登场
+      if (v < 0 || v > 1) return;
+      dz = .5 - .5 / SEA_HIT * v;
+    }
+    if (dz < -.1 || dz > .5) return;
+    const a = A * smooth(.5, .32, dz) * (dz < 0 ? 1 + dz / .1 : 1);
     if (a <= 0) return;
-    glow(px, py, 6 + near * 9, rgb, .55 * a);
-    disc(px, py, 1.2 + near * 1.1, `rgba(${rgb},${a})`);
-    const lx = px + side * (12 + near * 4);
-    cx.textAlign = side > 0 ? "left" : "right";
-    cx.fillStyle = `rgba(236,230,218,${a * .85})`; cx.font = `13px ${FONT}`; cx.fillText(name, lx, py - 2);
-    cx.fillStyle = `rgba(230,200,145,${a * .8})`; cx.font = `italic 13px ${FONT}`; cx.fillText(`${d.toFixed(2)} 光年`, lx, py + 15);
+    const near = 1 / (dz + .12);
+    const px = x + side * s * .055 * near, py = y + vy * s * .05 * near;
+    glow(px, py, 6 + near * 8, rgb, .55 * a);
+    disc(px, py, 1.2 + near * 1, `rgba(${rgb},${a})`);
+    // 标签放在星的外侧；碰到屏幕边缘就换到另一侧
+    const lines = note.split("\n");
+    cx.font = `12px ${FONT}`;
+    const tw = Math.max(60, ...lines.map(l => cx.measureText(l).width)), gap = 12 + near * 3;
+    let ls = side;
+    if (ls < 0 && px - gap - tw < 8) ls = 1; else if (ls > 0 && px + gap + tw > W - 8) ls = -1;
+    const lx = px + ls * gap;
+    cx.textAlign = ls > 0 ? "left" : "right";
+    cx.fillStyle = `rgba(236,230,218,${a * .9})`; cx.font = `14px ${FONT}`; cx.fillText(name, lx, py - 4);
+    cx.fillStyle = `rgba(230,200,145,${a * .85})`; cx.font = `italic 13px ${FONT}`; cx.fillText(`${d.toFixed(2)} 光年`, lx, py + 13);
+    cx.fillStyle = `rgba(236,230,218,${a * .6})`; cx.font = `12px ${FONT}`;
+    lines.forEach((l, li) => cx.fillText(l, lx, py + 31 + li * 16));
   });
   // 那一天的光，此刻在这里
   [idx.c8b, idx.c8c].forEach(bi => {
@@ -1257,7 +1435,7 @@ spark.addEventListener("click", () => {
   const open = () => {
     banged = true;
     layoutTrack();
-    const p = idx.c1h + .45;
+    const p = idx.c1z + .45;
     scrollTo(0, scrollForP(p));
     pS = pT = p;
     Object.assign(cur, structuredClone(SKY.hot)); target = SKY.hot;
@@ -1311,6 +1489,7 @@ function jumpTo(id, u) {
 /* ======== 主循环 ======== */
 const hint = $("#hint"), progress = $("#progress"), progI = $("i", progress), ruler = $("#ruler");
 let last = performance.now(), camZ = 0, lastCamZ = 0, speed = 0, activeI = -1;
+let timeScale = 1, simT = 0, cruise = 0;   // “时间还没有开始”那一屏，一切静止
 
 function updateBeats(p) {
   for (const b of beats) {
@@ -1341,26 +1520,32 @@ function frame(t) {
   if (Math.abs(pT - pS) < 1e-4) pS = pT;
   const p = pS;
 
-  camZ = zAtP(p) + (reduceMotion ? 0 : t * .014);   // 不滑的时候也在慢慢往前漂
-  speed = lerp(speed, (camZ - lastCamZ) / realDt, .25); lastCamZ = camZ;
-
   // 当前所在的站：天空、时钟
   const ai = Math.max(0, Math.min(N - 1, Math.floor(p + .08)));
   if (ai !== activeI) {
     activeI = ai;
     const b = beats[ai];
     target = SKY[b.skyEff];
-    if (b.modeEff === "age" && banged) { clockMode = "age"; clockL.textContent = "宇宙年龄"; setAge(ageForBeat(ai)); }
+    if (b.modeEff === "none") {
+      clockMode = "none"; cancelAnimationFrame(ageAnim);
+      clockL.textContent = "宇宙年龄"; vEl.innerHTML = '<span class="none">时间尚未开始</span>'; uEl.textContent = "";
+    } else if (b.modeEff === "age" && banged) { clockMode = "age"; clockL.textContent = "宇宙年龄"; setAge(ageForBeat(ai)); }
   }
+
+  timeScale = lerp(timeScale, beats[ai].modeEff === "none" ? 0 : 1, 1 - Math.exp(-dt * 2.5));
+  const sdt = dt * timeScale; simT += sdt;
+  cruise += (reduceMotion ? 0 : 14) * sdt;                  // 不滑的时候也在慢慢往前漂
+  camZ = zAtP(p) + cruise;
+  speed = lerp(speed, (camZ - lastCamZ) / realDt, .25); lastCamZ = camZ;
   if (beats[ai].modeEff === "dist") {
     if (clockMode !== "dist") { clockMode = "dist"; clockL.textContent = "离开地球"; cancelAnimationFrame(ageAnim); }
     lyNow = lyAt(p);
     vEl.textContent = lyNow < 10 ? lyNow.toFixed(2) : lyNow.toFixed(1); uEl.textContent = "光年";
   }
-  const inStory = banged && p > idx.c1h - .3;
+  const inStory = banged && p > idx.c1z - .3;
   clock.classList.toggle("on", inStory);
   progress.classList.toggle("on", inStory);
-  progI.style.transform = `scaleY(${clamp01((p - idx.c1h) / (N - 1 - idx.c1h)).toFixed(4)})`;
+  progI.style.transform = `scaleY(${clamp01((p - idx.c1z) / (N - 1 - idx.c1z)).toFixed(4)})`;
   hint.style.opacity = (1 - smooth(.55, .72, p)).toFixed(3);
 
   updateBeats(p);
@@ -1369,23 +1554,35 @@ function frame(t) {
   const k = 1 - Math.exp(-dt * (target.rate || 1.6));
   for (let i = 0; i < 3; i++) { cur.bg[i] = lerp(cur.bg[i], target.bg[i], k); cur.col[i] = lerp(cur.col[i], target.col[i], k); }
   for (let i = 0; i < 4; i++) cur.mote[i] = lerp(cur.mote[i], target.mote[i], k);
-  cur.stars = lerp(cur.stars, target.stars, k * .7);
-  cur.fog = lerp(cur.fog, target.fog, k);
+  for (const key of SKY_KEYS) cur[key] = lerp(cur[key] || 0, target[key] || 0, key === "stars" ? k * .7 : k);
 
   cx.globalCompositeOperation = "source-over";
   cx.fillStyle = `rgb(${cur.bg.map(Math.round).join(",")})`;
   cx.fillRect(0, 0, W, H);
 
+  // 银河、远处数不清的星星
+  if ((cur.milky || 0) > .01) {
+    const side = Math.max(W, H) * 1.35;
+    cx.globalAlpha = cur.milky * .85;
+    cx.drawImage(milkyTex, W / 2 - side / 2, H * .42 - side / 2, side, side);
+  }
+  if (cur.stars > .01) {
+    cx.globalAlpha = Math.min(1, cur.stars * 1.1) * .9;
+    cx.drawImage(farTex, W / 2 - farSide / 2, H / 2 - farSide / 2, farSide, farSide);
+  }
+  cx.globalAlpha = 1;
+
   // 雾里飞不快，被撞得一顿一顿
+  const st = simT * 1000;
   const shake = reduceMotion || cur.fog < .5 ? 0 : cur.fog * 3.5;
-  const ox = W / 2 + (Math.sin(t / 47) + Math.sin(t / 31)) * shake;
-  const oy = H / 2 + (Math.cos(t / 53) + Math.sin(t / 37)) * shake;
+  const ox = W / 2 + (Math.sin(st / 47) + Math.sin(st / 31)) * shake;
+  const oy = H / 2 + (Math.cos(st / 53) + Math.sin(st / 37)) * shake;
 
   if (cur.fog > .005) {
     cx.globalCompositeOperation = "lighter";
     const col = cur.col.map(Math.round).join(","), big = Math.max(W, H);
     for (const b of blobs) {
-      b.x += b.vx * dt; b.y += b.vy * dt;
+      b.x += b.vx * sdt; b.y += b.vy * sdt;
       if (b.x < -.2 || b.x > 1.2) b.vx *= -1;
       if (b.y < -.2 || b.y > 1.2) b.vy *= -1;
       const bx = b.x * W + ox - W / 2, by = b.y * H + oy - H / 2, br = b.r * big;
@@ -1402,7 +1599,7 @@ function frame(t) {
     const mc = cur.mote.slice(0, 3).map(Math.round).join(",");
     for (const m of motes) {
       const dz = recycle(m, camZ, M_DEPTH, M_SPREAD);
-      const jx = cur.fog > .3 ? Math.sin(t / 90 + m.j) * 6 * cur.fog : 0;
+      const jx = cur.fog > .3 ? Math.sin(st / 90 + m.j) * 6 * cur.fog : 0;
       const sx = ox + (m.x + jx) * F / dz, sy = oy + m.y * F / dz;
       if (sx < -20 || sx > W + 20 || sy < -20 || sy > H + 20) continue;
       const fade = clamp01((M_DEPTH - dz) / (M_DEPTH * .4)) * clamp01(dz / 120);
@@ -1445,6 +1642,9 @@ function frame(t) {
 
   // 各章的画面
   flash = 0;
+  sceneChaos(sdt, simT);
+  sceneSparkle(dt, t);
+  sceneBodies(t, ox, oy);
   sceneCMB();
   sceneStar(t);
   sceneNeutron(t, dt);
